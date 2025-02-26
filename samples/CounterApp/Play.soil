@@ -1,0 +1,23 @@
+
+class PersonalName {
+  let firstName: String
+  let middleName: String?
+  let lastName: String
+}
+
+union EmailAddress {
+  let address: String
+  
+  case Confirmed;
+  case Unconfirmed;
+}
+
+value class CepCode {
+  let value: String satisfies isValid(value)
+  
+  static isValid(value: String): Bool {
+    let pattern = /^[0-9]{5}-[0-9]{3}$/
+    
+    return pattern.test(value)
+  }
+}

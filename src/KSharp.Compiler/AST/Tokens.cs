@@ -1,0 +1,38 @@
+namespace KSharp.Compiler.AST;
+
+public enum Tokens
+{
+    NewLine,
+    TrueToken,
+    FalseToken,
+    TypeIdentifier,
+    LetKeyword,
+    VarKeyword,
+    Colon,
+    AssignOperator,
+    FloatingNumber,
+    PlusOperator,
+    MinusOperator,
+    MultiplyOperator,
+    DivideOperator,
+    ModuloOperator,
+    NameIdentifier,
+    String,
+    Integer,
+    TypeAnnotation,
+    CompilationUnit,
+    Statement,
+    StatementList,
+    DeclarationStatement,
+    ValueDeclarationStatement,
+    VariableDeclarationStatement,
+    ExpressionStatement,
+    Expression,
+    ConstantExpression,
+    VariableExpression,
+    GroupedExpression,
+    BinaryExpression,
+    BinaryOperator,
+    ParenthesisOpen,
+    ParenthesisClose
+}

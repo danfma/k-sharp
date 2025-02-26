@@ -1,0 +1,29 @@
+using static System.Console
+
+fizzBuzzTo (100)
+
+func isDivisibleBy (number: Int32, divisor: Int32) -> Bool {
+  if divisor == 0 {
+    return false
+  }
+  
+  return number % divisor == 0
+}
+
+func fizzBuzz (number: Int32) {
+  if isDivisibleBy (number, 15) {
+    writeLine ("FizzBuzz")
+  } else if isDivisibleBy (number, 3) {
+    writeLine ("Fizz")
+  } else if isDivisibleBy (number, 5) {
+    writeLine ("Buzz")
+  } else {
+    writeLine (number)
+  }
+}
+
+func fizzBuzzTo (number: Int32) {
+  foreach i in 1..number {
+    fizzBuzz (i)
+  }
+}
