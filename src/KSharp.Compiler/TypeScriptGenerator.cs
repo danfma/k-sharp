@@ -28,7 +28,7 @@ public class TypeScriptGenerator : AstVisitor
             var param = function.Parameters[i];
             _output.Append(param.Identifier);
             _output.Append(": ");
-            _output.Append(MapType(param.Type.Name));
+            _output.Append(MapType(param.Type.Identifier));
 
             if (i < function.Parameters.Count - 1)
             {
@@ -37,7 +37,7 @@ public class TypeScriptGenerator : AstVisitor
         }
 
         _output.Append("): ");
-        _output.Append(MapType(function.ReturnType.Name));
+        _output.Append(MapType(function.ReturnType.Identifier));
         _output.AppendLine(" {");
 
         // Corpo da função

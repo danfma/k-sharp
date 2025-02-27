@@ -12,14 +12,14 @@
               Name: n
             },
             Type: {
-              Name: {
+              Identifier: {
                 Name: Int
               }
             }
           }
         ],
         ReturnType: {
-          Name: {
+          Identifier: {
             Name: Int
           }
         },

@@ -12,7 +12,7 @@
               Name: a
             },
             Type: {
-              Name: {
+              Identifier: {
                 Name: Int
               }
             }
@@ -22,14 +22,14 @@
               Name: b
             },
             Type: {
-              Name: {
+              Identifier: {
                 Name: Int
               }
             }
           }
         ],
         ReturnType: {
-          Name: {
+          Identifier: {
             Name: Int
           }
         },
@@ -70,7 +70,7 @@
                 Name: a
               },
               Type: {
-                Name: {
+                Identifier: {
                   Name: Int
                 }
               },
@@ -84,7 +84,7 @@
                 Name: b
               },
               Type: {
-                Name: {
+                Identifier: {
                   Name: Int
                 }
               },
