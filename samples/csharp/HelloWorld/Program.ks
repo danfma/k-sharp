@@ -1,1 +1,0 @@
-writeLine("Hello, World!")
