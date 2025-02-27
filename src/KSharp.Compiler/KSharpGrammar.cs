@@ -56,13 +56,11 @@ namespace KSharp.Compiler
             var kwFun = ToTerm(KeyWord.Fun);
             var kwVal = ToTerm(KeyWord.Val);
             var kwVar = ToTerm(KeyWord.Var);
-            var kwIf = ToTerm("if");
+            var kwIf = ToTerm(KeyWord.If);
             var kwElse = ToTerm("else");
             var kwReturn = ToTerm(KeyWord.Return);
             var kwNamespace = ToTerm(KeyWord.Namespace);
             var kwUsing = ToTerm(KeyWord.Using);
-
-            var kwInt = ToTerm("Int");
 
             // Non-terminals
             var sourceFile = new NonTerminal(NodeNames.SourceFile);
@@ -138,9 +136,7 @@ namespace KSharp.Compiler
                 (kwVal + identifier + typeAnnotation + assign + expression)
                 | (kwVar + identifier + typeAnnotation + assign + expression);
 
-            ifStatement.Rule =
-                kwIf + expression + blockStatement
-                | kwIf + expression + blockStatement + kwElse + blockStatement;
+            ifStatement.Rule = kwIf + expression + blockStatement;
 
             returnStatement.Rule = kwReturn + expression;
 

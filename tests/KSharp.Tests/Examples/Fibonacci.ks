@@ -1,13 +1,7 @@
-
-fun fibonacci(n: Int): Int {
+fun factorial(n: Int): Int {
   if n <= 2 {
-    return 1
+    return n
   }
   
-  return fibonacci(n - 1) + fibonacci(n - 2)
+  return n * factorial(n - 1)
 }
-
-val n = 5
-val result = fibonacci(n)
-
-writeLine(result)

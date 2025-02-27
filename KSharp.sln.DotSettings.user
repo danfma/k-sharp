@@ -8,5 +8,7 @@
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::8E6A276D-F533-4AD4-9329-06A56A49F3CD::net8.0::KSharp.Tests.Parsing.ParsingTest.ParseSum&lt;/TestId&gt;
     &lt;TestId&gt;VsTest::8E6A276D-F533-4AD4-9329-06A56A49F3CD::net8.0::executor://xunit/VsTestRunner3/netcore/#KSharp.Tests.Parsing.ParsingTest.ParseSum&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::8E6A276D-F533-4AD4-9329-06A56A49F3CD::net8.0::KSharp.Tests.Parsing.ParsingTest&lt;/TestId&gt;
+    &lt;TestId&gt;VsTest::8E6A276D-F533-4AD4-9329-06A56A49F3CD::net8.0::executor://xunit/VsTestRunner3/netcore/#KSharp.Tests.Parsing.ParsingTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

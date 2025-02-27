@@ -127,7 +127,7 @@ public class TreeNodeTransformer
             NodeNames.VariableDeclaration => ToVariableDeclaration(node),
             NodeNames.ReturnStatement => ToReturnStatement(node),
             NodeNames.ExpressionStatement => ToExpressionStatement(node),
-            // NodeNames.IfStatement => ToIfStatement(node),
+            NodeNames.IfStatement => ToIfStatement(node),
             _ => throw new InvalidOperationException($"Unknown statement type: {node.Term.Name}")
         };
     }
@@ -149,6 +149,17 @@ public class TreeNodeTransformer
         var expression = node.ChildNodes.Count == 1 ? null : ToExpression(node.ChildNodes[1]);
 
         return new ReturnStatement(expression);
+    }
+
+    private IfStatement ToIfStatement(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.IfStatement);
+        AssertTerm(node.ChildNodes[0], KeyWord.If);
+
+        var condition = ToExpression(node.ChildNodes[1]);
+        var blockStatement = ToBlockStatement(node.ChildNodes[2]);
+
+        return new IfStatement(condition, blockStatement);
     }
 
     private Expression ToExpression(ParseTreeNode node)
@@ -339,5 +350,6 @@ public class TreeNodeTransformer
         public const string Return = "return";
         public const string Var = "var";
         public const string Val = "val";
+        public const string If = "if";
     }
 }

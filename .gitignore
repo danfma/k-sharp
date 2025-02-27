@@ -3,5 +3,8 @@ obj
 .idea
 .vscode
 
+# xUnit
+*.received.txt
+
 /Kool.sln.DotSettings.user
 .DS_Store

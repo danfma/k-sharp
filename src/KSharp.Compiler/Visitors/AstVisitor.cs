@@ -45,8 +45,6 @@ namespace KSharp.Compiler.Visitors
         public virtual void VisitIfStatement(IfStatement ifStmt)
         {
             ifStmt.Condition?.Accept(this);
-            ifStmt.ThenBlock?.Accept(this);
-            ifStmt.ElseBlock?.Accept(this);
         }
 
         public virtual void VisitFunctionCallExpression(FunctionCallExpression funcCall)
