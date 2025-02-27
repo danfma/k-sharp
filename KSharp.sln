@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CounterApp", "samples\Count
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi", "samples\csharp\MinimalApi\MinimalApi.csproj", "{DF28978B-9F84-4A7A-9621-DECA255CD838}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ksc", "ksc\ksc.csproj", "{C8FC2BAB-DA9C-46B5-9484-B7BFF5F1F583}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ksc", "src\ksc\ksc.csproj", "{C8FC2BAB-DA9C-46B5-9484-B7BFF5F1F583}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

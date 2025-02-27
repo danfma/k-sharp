@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\KSharp.Compiler\KSharp.Compiler.csproj" />
+      <ProjectReference Include="..\KSharp.Compiler\KSharp.Compiler.csproj" />
     </ItemGroup>
 
 </Project>
