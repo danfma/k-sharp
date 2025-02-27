@@ -1,6 +1,11 @@
 namespace KSharp.Compiler.Ast;
 
-/// <summary>
-/// Representa um statement if/else
-/// </summary>
-public record IfStatement(Expression Condition, BlockStatement BlockStatement) : Statement;
+public record IfStatement(Expression Condition, BlockStatement BlockStatement, ElseClause? Else)
+    : Statement;
+
+public abstract record ElseClause : AstNode;
+
+public record ElseIfStatement(Expression Condition, BlockStatement BlockStatement, ElseClause? Else)
+    : ElseClause;
+
+public record ElseStatement(BlockStatement BlockStatement) : ElseClause;

@@ -128,6 +128,7 @@ public class TreeNodeTransformer
             NodeNames.ReturnStatement => ToReturnStatement(node),
             NodeNames.ExpressionStatement => ToExpressionStatement(node),
             NodeNames.IfStatement => ToIfStatement(node),
+            NodeNames.ForeachStatement => ToForeachStatement(node),
             _ => throw new InvalidOperationException($"Unknown statement type: {node.Term.Name}")
         };
     }
@@ -158,8 +159,55 @@ public class TreeNodeTransformer
 
         var condition = ToExpression(node.ChildNodes[1]);
         var blockStatement = ToBlockStatement(node.ChildNodes[2]);
+        var elseClause = ToElseClause(node.ChildNodes[3]);
 
-        return new IfStatement(condition, blockStatement);
+        return new IfStatement(condition, blockStatement, elseClause);
+    }
+
+    private ForeachStatement ToForeachStatement(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.ForeachStatement);
+        AssertTerm(node.ChildNodes[0], KeyWord.Foreach);
+        AssertTerm(node.ChildNodes[2], KeyWord.In);
+
+        var itemIdentifier = ToIdentifier(node.ChildNodes[1]);
+        var expression = ToExpression(node.ChildNodes[3]);
+        var blockStatement = ToBlockStatement(node.ChildNodes[4]);
+
+        return new ForeachStatement(itemIdentifier, expression, blockStatement);
+    }
+
+    private ElseClause? ToElseClause(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.ElseClause);
+
+        if (node.ChildNodes.Count == 0)
+            return null;
+
+        node = node.ChildNodes[1];
+
+        return node.Term.Name switch
+        {
+            NodeNames.BlockStatement => ToElseStatement(node),
+            NodeNames.IfStatement => ToElseIfStatement(node),
+            _ => throw new InvalidOperationException($"Unknown else clause type: {node.Term.Name}")
+        };
+    }
+
+    private ElseStatement ToElseStatement(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.BlockStatement);
+
+        return new ElseStatement(ToBlockStatement(node));
+    }
+
+    private ElseIfStatement ToElseIfStatement(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.IfStatement);
+
+        var statement = ToIfStatement(node);
+
+        return new ElseIfStatement(statement.Condition, statement.BlockStatement, statement.Else);
     }
 
     private Expression ToExpression(ParseTreeNode node)
@@ -210,6 +258,7 @@ public class TreeNodeTransformer
         return node.ChildNodes[0].Term.Name switch
         {
             NodeNames.NumberLiteral => ToNumberLiteral(node.ChildNodes[0]),
+            NodeNames.StringLiteral => ToStringLiteral(node.ChildNodes[0]),
             _ => throw new InvalidOperationException($"Unknown literal type: {node.Term.Name}")
         };
     }
@@ -226,6 +275,15 @@ public class TreeNodeTransformer
             double d => new NumberLiteralExpression<double>(d),
             _ => throw new InvalidOperationException($"Unknown number literal type: {tokenValue}")
         };
+    }
+
+    private LiteralExpression ToStringLiteral(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.StringLiteral);
+
+        var tokenValue = (string)node.Token.Value;
+
+        return new StringLiteralExpression(tokenValue);
     }
 
     private ValueExpression ToFunctionCall(ParseTreeNode node)
@@ -327,7 +385,9 @@ public class TreeNodeTransformer
         public const string Statement = nameof(Statement);
         public const string BlockStatement = nameof(BlockStatement);
         public const string IfStatement = nameof(IfStatement);
+        public const string ElseClause = nameof(ElseClause);
         public const string ReturnStatement = nameof(ReturnStatement);
+        public const string ForeachStatement = nameof(ForeachStatement);
         public const string ExpressionStatement = nameof(ExpressionStatement);
         public const string Expression = nameof(Expression);
         public const string ValueExpression = nameof(ValueExpression);
@@ -336,6 +396,7 @@ public class TreeNodeTransformer
         public const string Variable = nameof(Variable);
         public const string Literal = nameof(Literal);
         public const string NumberLiteral = nameof(NumberLiteral);
+        public const string StringLiteral = nameof(StringLiteral);
         public const string FunctionCall = nameof(FunctionCall);
         public const string ArgumentList = nameof(ArgumentList);
         public const string StringInterpolation = nameof(StringInterpolation);
@@ -351,5 +412,26 @@ public class TreeNodeTransformer
         public const string Var = "var";
         public const string Val = "val";
         public const string If = "if";
+        public const string Else = "else";
+        public const string Foreach = "foreach";
+        public const string In = "in";
+    }
+
+    public static class Operator
+    {
+        public const string Add = "+";
+        public const string Subtract = "-";
+        public const string Multiply = "*";
+        public const string Divide = "/";
+        public const string Modulo = "%";
+
+        public const string Range = "..";
+
+        public const string Assign = "=";
+        public const string AddAndAssign = "+=";
+        public const string SubtractAndAssign = "-=";
+        public const string MultiplyAndAssign = "*=";
+        public const string DivideAndAssign = "/=";
+        public const string ModuloAndAssign = "%=";
     }
 }

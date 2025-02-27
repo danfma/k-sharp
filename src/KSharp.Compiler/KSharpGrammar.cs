@@ -11,7 +11,12 @@ namespace KSharp.Compiler
             // Terminals
             var identifier = new IdentifierTerminal(NodeNames.Identifier);
             var numberLiteral = new NumberLiteral(NodeNames.NumberLiteral);
-            var stringLiteral = new StringLiteral("string", "\"", StringOptions.AllowsAllEscapes);
+
+            var stringLiteral = new StringLiteral(
+                NodeNames.StringLiteral,
+                "\"",
+                StringOptions.AllowsAllEscapes
+            );
 
             // Comments
             var lineComment = new CommentTerminal(
@@ -34,12 +39,20 @@ namespace KSharp.Compiler
             var semicolon = ToTerm(";");
             var colon = ToTerm(":");
             var dot = ToTerm(".");
-            var assign = ToTerm("=");
+            var range = ToTerm(Operator.Range);
 
-            var plus = ToTerm("+");
-            var minus = ToTerm("-");
-            var multiply = ToTerm("*");
-            var divide = ToTerm("/");
+            var assign = ToTerm(Operator.Assign);
+            var addAndAssign = ToTerm(Operator.AddAndAssign);
+            var subtractAndAssign = ToTerm(Operator.SubtractAndAssign);
+            var multiplyAndAssign = ToTerm(Operator.MultiplyAndAssign);
+            var divideAndAssign = ToTerm(Operator.DivideAndAssign);
+            var moduloAndAssign = ToTerm(Operator.ModuloAndAssign);
+
+            var plus = ToTerm(Operator.Add);
+            var minus = ToTerm(Operator.Subtract);
+            var multiply = ToTerm(Operator.Multiply);
+            var divide = ToTerm(Operator.Divide);
+            var modulo = ToTerm(Operator.Modulo);
 
             var braceOpen = ToTerm("{");
             var braceClose = ToTerm("}");
@@ -57,10 +70,12 @@ namespace KSharp.Compiler
             var kwVal = ToTerm(KeyWord.Val);
             var kwVar = ToTerm(KeyWord.Var);
             var kwIf = ToTerm(KeyWord.If);
-            var kwElse = ToTerm("else");
+            var kwElse = ToTerm(KeyWord.Else);
             var kwReturn = ToTerm(KeyWord.Return);
             var kwNamespace = ToTerm(KeyWord.Namespace);
             var kwUsing = ToTerm(KeyWord.Using);
+            var kwForeach = ToTerm(KeyWord.Foreach);
+            var kwIn = ToTerm(KeyWord.In);
 
             // Non-terminals
             var sourceFile = new NonTerminal(NodeNames.SourceFile);
@@ -83,7 +98,9 @@ namespace KSharp.Compiler
             var statement = new NonTerminal(NodeNames.Statement);
             var blockStatement = new NonTerminal(NodeNames.BlockStatement);
             var ifStatement = new NonTerminal(NodeNames.IfStatement);
+            var elseClause = new NonTerminal(NodeNames.ElseClause);
             var returnStatement = new NonTerminal(NodeNames.ReturnStatement);
+            var foreachStatement = new NonTerminal(NodeNames.ForeachStatement);
             var expressionStatement = new NonTerminal(NodeNames.ExpressionStatement);
 
             var expression = new NonTerminal(NodeNames.Expression);
@@ -130,13 +147,22 @@ namespace KSharp.Compiler
             blockStatement.Rule = braceOpen + statementList + braceClose;
             statementList.Rule = MakeStarRule(statementList, statement);
 
-            statement.Rule = varDeclaration | ifStatement | returnStatement | expressionStatement;
+            statement.Rule =
+                varDeclaration
+                | ifStatement
+                | foreachStatement
+                | returnStatement
+                | expressionStatement;
 
             varDeclaration.Rule =
                 (kwVal + identifier + typeAnnotation + assign + expression)
                 | (kwVar + identifier + typeAnnotation + assign + expression);
 
-            ifStatement.Rule = kwIf + expression + blockStatement;
+            ifStatement.Rule = kwIf + expression + blockStatement + elseClause;
+
+            elseClause.Rule = kwElse + blockStatement | kwElse + ifStatement | Empty;
+
+            foreachStatement.Rule = kwForeach + identifier + kwIn + expression + blockStatement;
 
             returnStatement.Rule = kwReturn + expression;
 
@@ -156,6 +182,9 @@ namespace KSharp.Compiler
                 | minus
                 | multiply
                 | divide
+                | modulo
+                | range
+                | dot
                 | lessThan
                 | lessThanOrEqual
                 | greaterThan
@@ -171,8 +200,19 @@ namespace KSharp.Compiler
             stringInterpolation.Rule = ToTerm("$") + stringLiteral;
 
             // Operator precedence
-            RegisterOperators(1, plus, minus);
-            RegisterOperators(2, multiply, divide);
+            RegisterOperators(
+                1,
+                assign,
+                addAndAssign,
+                subtractAndAssign,
+                multiplyAndAssign,
+                divideAndAssign,
+                moduloAndAssign
+            );
+            RegisterOperators(2, dot);
+            RegisterOperators(3, range);
+            RegisterOperators(4, plus, minus);
+            RegisterOperators(5, multiply, divide);
 
             // Set root, punctuation & keyword classes
             Root = sourceFile;
@@ -188,7 +228,7 @@ namespace KSharp.Compiler
                 assign
             );
 
-            MarkReservedWords("fun", "val", "var", "if", "else", "return");
+            MarkReservedWords("fun", "val", "var", "if", KeyWord.Else, KeyWord.Foreach, "return");
         }
     }
 }

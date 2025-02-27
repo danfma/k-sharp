@@ -48,6 +48,19 @@ public class ParsingTest(ITestOutputHelper output)
         
         return Verify(sourceFile);
     }
+    
+    [Fact]
+    public Task ParseFizzBuzz()
+    {
+        const string FileName = "FizzBuzz.ks";
+        
+        var code = SingleFileReader.Read(FileName);
+        var sourceFile = new KSharpCompiler(_output).ParseSource(code, FileName);
+
+        sourceFile.ShouldBeOfType<SourceFile>();
+        
+        return Verify(sourceFile);
+    }
 
     private sealed class OutputWriter(ITestOutputHelper output) : StringWriter
     {
