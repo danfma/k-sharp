@@ -1,7 +1,7 @@
-fun factorial(n: Int): Int {
-  if n <= 2 {
+fun fibonacci(n: UInt): UInt {
+  if n <= 1 {
     return n
   }
   
-  return n * factorial(n - 1)
+  return fibonacci(n - 1) + fibonacci(n - 2)
 }

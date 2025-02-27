@@ -1,10 +1,10 @@
 ﻿{
-  FileName: Fibonacci.ks,
+  FileName: Factorial.ks,
   Declarations: [
     {
       Function: {
         Identifier: {
-          Name: fibonacci
+          Name: factorial
         },
         Parameters: [
           {
@@ -13,14 +13,14 @@
             },
             Type: {
               Identifier: {
-                Name: UInt
+                Name: Int
               }
             }
           }
         ],
         ReturnType: {
           Identifier: {
-            Name: UInt
+            Name: Int
           }
         },
         Body: {
@@ -36,7 +36,7 @@
                   Symbol: <=
                 },
                 Right: {
-                  Value: 1
+                  Value: 2
                 }
               },
               BlockStatement: {
@@ -55,7 +55,15 @@
               Expression: {
                 Left: {
                   Name: {
-                    Name: fibonacci
+                    Name: n
+                  }
+                },
+                Operator: {
+                  Symbol: *
+                },
+                Right: {
+                  Name: {
+                    Name: factorial
                   },
                   Arguments: [
                     {
@@ -69,29 +77,6 @@
                       },
                       Right: {
                         Value: 1
-                      }
-                    }
-                  ]
-                },
-                Operator: {
-                  Symbol: +
-                },
-                Right: {
-                  Name: {
-                    Name: fibonacci
-                  },
-                  Arguments: [
-                    {
-                      Left: {
-                        Name: {
-                          Name: n
-                        }
-                      },
-                      Operator: {
-                        Symbol: -
-                      },
-                      Right: {
-                        Value: 2
                       }
                     }
                   ]
