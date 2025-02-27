@@ -1,5 +1,5 @@
 using Irony.Parsing;
-using static KSharp.Compiler.Ast.TreeNodeTransformer;
+using static KSharp.Compiler.Syntax.TreeNodeTransformer;
 
 namespace KSharp.Compiler
 {

@@ -1,14 +1,14 @@
-using System.IO;
 using System.Threading.Tasks;
 using KSharp.Compiler;
-using KSharp.Compiler.Ast;
+using KSharp.Compiler.Syntax;
 using KSharp.Tests.Examples;
+using KSharp.Tests.Utils;
 
 namespace KSharp.Tests.Parsing;
 
 public class ParsingTest(ITestOutputHelper output)
 {
-    private readonly OutputWriter _output = new(output);
+    private readonly TestTextWriter _output = new(output);
     
     [Fact]
     public Task ParseSum()
@@ -60,10 +60,5 @@ public class ParsingTest(ITestOutputHelper output)
         sourceFile.ShouldBeOfType<SourceFile>();
         
         return Verify(sourceFile);
-    }
-
-    private sealed class OutputWriter(ITestOutputHelper output) : StringWriter
-    {
-        public override void WriteLine(string value) => output.WriteLine(value);
     }
 }
