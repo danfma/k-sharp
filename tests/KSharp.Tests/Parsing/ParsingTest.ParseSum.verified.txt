@@ -1,0 +1,138 @@
+﻿{
+  FileName: Sum.ks,
+  Declarations: [
+    {
+      Function: {
+        Identifier: {
+          Name: sum
+        },
+        Parameters: [
+          {
+            Identifier: {
+              Name: a
+            },
+            Type: {
+              Name: {
+                Name: Int
+              }
+            }
+          },
+          {
+            Identifier: {
+              Name: b
+            },
+            Type: {
+              Name: {
+                Name: Int
+              }
+            }
+          }
+        ],
+        ReturnType: {
+          Name: {
+            Name: Int
+          }
+        },
+        Body: {
+          Statements: [
+            {
+              Expression: {
+                Left: {
+                  Name: {
+                    Name: a
+                  }
+                },
+                Operator: {
+                  Symbol: +
+                },
+                Right: {
+                  Name: {
+                    Name: b
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      Function: {
+        Identifier: {
+          Name: main
+        },
+        ReturnType: {},
+        Body: {
+          Statements: [
+            {
+              Mutable: false,
+              Name: {
+                Name: a
+              },
+              Type: {
+                Name: {
+                  Name: Int
+                }
+              },
+              Initializer: {
+                Value: 1
+              }
+            },
+            {
+              Mutable: false,
+              Name: {
+                Name: b
+              },
+              Type: {
+                Name: {
+                  Name: Int
+                }
+              },
+              Initializer: {
+                Value: 2
+              }
+            },
+            {
+              Mutable: false,
+              Name: {
+                Name: result
+              },
+              Type: {},
+              Initializer: {
+                Name: {
+                  Name: sum
+                },
+                Arguments: [
+                  {
+                    Name: {
+                      Name: a
+                    }
+                  },
+                  {
+                    Name: {
+                      Name: b
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              Expression: {
+                Name: {
+                  Name: writeLine
+                },
+                Arguments: [
+                  {
+                    Name: {
+                      Name: result
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
