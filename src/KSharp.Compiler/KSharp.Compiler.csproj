@@ -1,14 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>KSharp.Compiler</RootNamespace>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Irony" Version="1.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="IR\Low\" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,106 @@
+﻿{
+  FileName: Fibonacci.ks,
+  Declarations: [
+    {
+      Function: {
+        Identifier: {
+          Name: fibonacci
+        },
+        Parameters: [
+          {
+            Name: {
+              Name: n
+            },
+            Type: {
+              Identifier: {
+                Name: UInt
+              }
+            }
+          }
+        ],
+        ReturnType: {
+          Identifier: {
+            Name: UInt
+          }
+        },
+        Body: {
+          Statements: [
+            {
+              Condition: {
+                Left: {
+                  Name: {
+                    Name: n
+                  }
+                },
+                Operator: {
+                  Symbol: <=
+                },
+                Right: {
+                  Value: 1
+                }
+              },
+              Block: {
+                Statements: [
+                  {
+                    Expression: {
+                      Name: {
+                        Name: n
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              Expression: {
+                Left: {
+                  Name: {
+                    Name: fibonacci
+                  },
+                  Arguments: [
+                    {
+                      Left: {
+                        Name: {
+                          Name: n
+                        }
+                      },
+                      Operator: {
+                        Symbol: -
+                      },
+                      Right: {
+                        Value: 1
+                      }
+                    }
+                  ]
+                },
+                Operator: {
+                  Symbol: +
+                },
+                Right: {
+                  Name: {
+                    Name: fibonacci
+                  },
+                  Arguments: [
+                    {
+                      Left: {
+                        Name: {
+                          Name: n
+                        }
+                      },
+                      Operator: {
+                        Symbol: -
+                      },
+                      Right: {
+                        Value: 2
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

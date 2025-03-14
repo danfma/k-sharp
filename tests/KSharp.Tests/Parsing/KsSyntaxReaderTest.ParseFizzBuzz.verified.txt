@@ -1,0 +1,321 @@
+﻿{
+  FileName: FizzBuzz.ks,
+  Declarations: [
+    {
+      Function: {
+        Identifier: {
+          Name: main
+        },
+        ReturnType: {},
+        Body: {
+          Statements: [
+            {
+              Expression: {
+                Name: {
+                  Name: fizzBuzzTo
+                },
+                Arguments: [
+                  {
+                    Value: 100
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      Function: {
+        Identifier: {
+          Name: isDivisibleBy
+        },
+        Parameters: [
+          {
+            Name: {
+              Name: number
+            },
+            Type: {
+              Identifier: {
+                Name: Int32
+              }
+            }
+          },
+          {
+            Name: {
+              Name: divisor
+            },
+            Type: {
+              Identifier: {
+                Name: Int32
+              }
+            }
+          }
+        ],
+        ReturnType: {
+          Identifier: {
+            Name: Bool
+          }
+        },
+        Body: {
+          Statements: [
+            {
+              Condition: {
+                Left: {
+                  Name: {
+                    Name: divisor
+                  }
+                },
+                Operator: {
+                  Symbol: ==
+                },
+                Right: {}
+              },
+              Block: {
+                Statements: [
+                  {
+                    Expression: {
+                      Name: {
+                        Name: false
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              Expression: {
+                Left: {
+                  Name: {
+                    Name: number
+                  }
+                },
+                Operator: {
+                  Symbol: %
+                },
+                Right: {
+                  Left: {
+                    Name: {
+                      Name: divisor
+                    }
+                  },
+                  Operator: {
+                    Symbol: ==
+                  },
+                  Right: {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      Function: {
+        Identifier: {
+          Name: fizzBuzz
+        },
+        Parameters: [
+          {
+            Name: {
+              Name: number
+            },
+            Type: {
+              Identifier: {
+                Name: Int32
+              }
+            }
+          }
+        ],
+        ReturnType: {},
+        Body: {
+          Statements: [
+            {
+              Condition: {
+                Name: {
+                  Name: isDivisibleBy
+                },
+                Arguments: [
+                  {
+                    Name: {
+                      Name: number
+                    }
+                  },
+                  {
+                    Value: 15
+                  }
+                ]
+              },
+              Block: {
+                Statements: [
+                  {
+                    Expression: {
+                      Name: {
+                        Name: writeLine
+                      },
+                      Arguments: [
+                        {
+                          Value: FizzBuzz
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              Else: {
+                Condition: {
+                  Name: {
+                    Name: isDivisibleBy
+                  },
+                  Arguments: [
+                    {
+                      Name: {
+                        Name: number
+                      }
+                    },
+                    {
+                      Value: 3
+                    }
+                  ]
+                },
+                Block: {
+                  Statements: [
+                    {
+                      Expression: {
+                        Name: {
+                          Name: writeLine
+                        },
+                        Arguments: [
+                          {
+                            Value: Fizz
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                Else: {
+                  Condition: {
+                    Name: {
+                      Name: isDivisibleBy
+                    },
+                    Arguments: [
+                      {
+                        Name: {
+                          Name: number
+                        }
+                      },
+                      {
+                        Value: 5
+                      }
+                    ]
+                  },
+                  Block: {
+                    Statements: [
+                      {
+                        Expression: {
+                          Name: {
+                            Name: writeLine
+                          },
+                          Arguments: [
+                            {
+                              Value: Buzz
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  Else: {
+                    Block: {
+                      Statements: [
+                        {
+                          Expression: {
+                            Name: {
+                              Name: writeLine
+                            },
+                            Arguments: [
+                              {
+                                Name: {
+                                  Name: number
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      Function: {
+        Identifier: {
+          Name: fizzBuzzTo
+        },
+        Parameters: [
+          {
+            Name: {
+              Name: number
+            },
+            Type: {
+              Identifier: {
+                Name: Int32
+              }
+            }
+          }
+        ],
+        ReturnType: {
+          Identifier: {
+            Name: Void
+          }
+        },
+        Body: {
+          Statements: [
+            {
+              ItemIdentifier: {
+                Name: i
+              },
+              Expression: {
+                Left: {
+                  Value: 1
+                },
+                Operator: {
+                  Symbol: ..
+                },
+                Right: {
+                  Name: {
+                    Name: number
+                  }
+                }
+              },
+              Block: {
+                Statements: [
+                  {
+                    Expression: {
+                      Name: {
+                        Name: fizzBuzz
+                      },
+                      Arguments: [
+                        {
+                          Name: {
+                            Name: i
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

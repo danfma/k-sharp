@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\src\KSharp.Compiler.TypeScript\KSharp.Compiler.TypeScript.csproj" />
         <ProjectReference Include="..\..\src\KSharp.Compiler\KSharp.Compiler.csproj" />
     </ItemGroup>
 
