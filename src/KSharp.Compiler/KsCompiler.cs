@@ -5,7 +5,7 @@ using KSharp.Compiler.Syntax;
 namespace KSharp.Compiler;
 
 /// <summary>
-/// Compilador da linguagem K# que gera a AST.
+/// K# language compiler that generates the AST.
 /// </summary>
 public class KsCompiler
 {
@@ -23,12 +23,12 @@ public class KsCompiler
     }
 
     /// <summary>
-    /// Compila um código fonte K# em uma AST
+    /// Compiles K# source code into an AST
     /// </summary>
-    /// <param name="code">Código fonte K#</param>
-    /// <param name="fileName">Nome do arquivo</param>
-    /// <returns>AST representando o código</returns>
-    /// <exception cref="CompilationException">Lançada quando houver erro de compilação</exception>
+    /// <param name="code">K# source code</param>
+    /// <param name="fileName">File name</param>
+    /// <returns>AST representing the code</returns>
+    /// <exception cref="CompilationException">Thrown when there is a compilation error</exception>
     public KsSourceFileSyntax ParseSource(string code, string fileName)
     {
         var parseTree = _parser.Parse(code);

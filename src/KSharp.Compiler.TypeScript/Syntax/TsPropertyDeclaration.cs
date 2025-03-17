@@ -1,7 +1,7 @@
 namespace KSharp.Compiler.TypeScript.Syntax;
 
 /// <summary>
-/// Propriedade de classe
+/// Class property
 /// </summary>
 public record TsPropertyDeclaration(
     TsIdentifier Name,

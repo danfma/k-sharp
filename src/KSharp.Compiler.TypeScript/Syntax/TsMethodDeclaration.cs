@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 namespace KSharp.Compiler.TypeScript.Syntax;
 
 /// <summary>
-/// Método de classe
+/// Class method
 /// </summary>
 public record TsMethodDeclaration(
     TsIdentifier Name,

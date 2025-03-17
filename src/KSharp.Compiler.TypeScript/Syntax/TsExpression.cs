@@ -1,6 +1,6 @@
 namespace KSharp.Compiler.TypeScript.Syntax;
 
 /// <summary>
-/// Base para todas as expressões TypeScript
+/// Base for all TypeScript expressions
 /// </summary>
 public abstract record TsExpression : TsSyntaxNode;

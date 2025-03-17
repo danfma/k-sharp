@@ -1,6 +1,6 @@
 namespace KSharp.Compiler.Syntax;
 
 /// <summary>
-/// Classe base para todos os statements
+/// Base class for all statements
 /// </summary>
 public abstract record KsStatementSyntax : KsNodeSyntax;

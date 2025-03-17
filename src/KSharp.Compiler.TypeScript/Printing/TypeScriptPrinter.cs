@@ -4,7 +4,7 @@ using KSharp.Compiler.TypeScript.Syntax;
 namespace KSharp.Compiler.TypeScript.Printing;
 
 /// <summary>
-/// Converte árvores de sintaxe TypeScript em código
+/// Converts TypeScript syntax trees to code
 /// </summary>
 public class TypeScriptPrinter
 {
@@ -12,10 +12,10 @@ public class TypeScriptPrinter
     private int _indentLevel = 0;
 
     /// <summary>
-    /// Gera o código TypeScript para um arquivo fonte
+    /// Generates TypeScript code for a source file
     /// </summary>
-    /// <param name="sourceFile">Arquivo fonte TypeScript</param>
-    /// <returns>Código TypeScript gerado</returns>
+    /// <param name="sourceFile">TypeScript source file</param>
+    /// <returns>Generated TypeScript code</returns>
     public string Print(TsSourceFile sourceFile)
     {
         _builder.Clear();

@@ -3,7 +3,7 @@ using KSharp.Compiler.TypeScript.Syntax;
 namespace KSharp.Compiler.TypeScript;
 
 /// <summary>
-/// Compila código K# para TypeScript
+/// Compiles K# code to TypeScript
 /// </summary>
 public class KSharpTypeScriptCompiler
 {
@@ -17,11 +17,11 @@ public class KSharpTypeScriptCompiler
     }
 
     /// <summary>
-    /// Compila o código K# para um arquivo TypeScript
+    /// Compiles K# code to a TypeScript file
     /// </summary>
-    /// <param name="code">Código fonte K#</param>
-    /// <param name="fileName">Nome do arquivo</param>
-    /// <returns>Arquivo TypeScript gerado</returns>
+    /// <param name="code">K# source code</param>
+    /// <param name="fileName">File name</param>
+    /// <returns>Generated TypeScript file</returns>
     public TsSourceFile Compile(string code, string fileName)
     {
         throw new NotImplementedException();

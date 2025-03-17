@@ -1,7 +1,7 @@
 namespace KSharp.Compiler.Syntax
 {
     /// <summary>
-    /// Classe base para todos os nós da AST
+    /// Base class for all AST nodes
     /// </summary>
     public abstract record KsNodeSyntax;
 }

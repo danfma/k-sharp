@@ -1,6 +1,6 @@
 namespace KSharp.Compiler.TypeScript.Syntax;
 
 /// <summary>
-/// Classe base para todos os nós de sintaxe TypeScript
+/// Base class for all TypeScript syntax nodes
 /// </summary>
 public abstract record TsSyntaxNode;

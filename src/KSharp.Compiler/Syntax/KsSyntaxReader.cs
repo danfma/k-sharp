@@ -3,7 +3,7 @@ using Irony.Parsing;
 namespace KSharp.Compiler.Syntax;
 
 /// <summary>
-/// Responsável por ler e analisar arquivos fonte K#, construindo as árvores sintáticas correspondentes
+/// Responsible for reading and parsing K# source files, building the corresponding syntax trees
 /// </summary>
 public class KsSyntaxReader
 {
@@ -19,12 +19,12 @@ public class KsSyntaxReader
     }
 
     /// <summary>
-    /// Analisa todos os arquivos .ks em um diretório e seus subdiretórios,
-    /// criando um projeto com as respectivas árvores sintáticas
+    /// Parses all .ks files in a directory and its subdirectories,
+    /// creating a project with the respective syntax trees
     /// </summary>
-    /// <param name="projectName">Nome do projeto</param>
-    /// <param name="rootDirectory">Diretório raiz do projeto</param>
-    /// <returns>Um objeto KsSyntaxProject com a AST de todos os arquivos</returns>
+    /// <param name="projectName">Project name</param>
+    /// <param name="rootDirectory">Project root directory</param>
+    /// <returns>A KsSyntaxProject object with the AST of all files</returns>
     public KsProjectSyntax ReadProject(string projectName, string rootDirectory)
     {
         var sourceFiles = Directory.GetFiles(rootDirectory, "*.ks", SearchOption.AllDirectories);
@@ -38,10 +38,10 @@ public class KsSyntaxReader
     }
 
     /// <summary>
-    /// Analisa um único arquivo fonte K#
+    /// Parses a single K# source file
     /// </summary>
-    /// <param name="filePath">Caminho do arquivo</param>
-    /// <returns>Árvore de análise sintática</returns>
+    /// <param name="filePath">File path</param>
+    /// <returns>Syntax parse tree</returns>
     public ParseTree Parse(string filePath)
     {
         var sourceCode = File.ReadAllText(filePath);
@@ -49,10 +49,10 @@ public class KsSyntaxReader
     }
 
     /// <summary>
-    /// Analisa um único arquivo fonte e constrói sua árvore sintática K#
+    /// Parses a single source file and builds its K# syntax tree
     /// </summary>
-    /// <param name="filePath">Caminho do arquivo</param>
-    /// <returns>O arquivo fonte com sua árvore sintática</returns>
+    /// <param name="filePath">File path</param>
+    /// <returns>The source file with its syntax tree</returns>
     public KsSourceFileSyntax ReadSourceFile(string filePath)
     {
         var parseTree = Parse(filePath);
@@ -68,11 +68,11 @@ public class KsSyntaxReader
     }
 
     /// <summary>
-    /// Analisa código fonte K# diretamente a partir de uma string
+    /// Parses K# source code directly from a string
     /// </summary>
-    /// <param name="sourceCode">Código fonte K#</param>
-    /// <param name="fileName">Nome do arquivo virtual (opcional)</param>
-    /// <returns>O arquivo fonte com sua árvore sintática</returns>
+    /// <param name="sourceCode">K# source code</param>
+    /// <param name="fileName">Virtual file name (optional)</param>
+    /// <returns>The source file with its syntax tree</returns>
     public KsSourceFileSyntax ReadSourceFromString(
         string sourceCode,
         string fileName = "unnamed.ks"

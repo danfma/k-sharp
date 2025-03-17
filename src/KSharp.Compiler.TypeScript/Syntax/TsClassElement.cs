@@ -1,6 +1,6 @@
 namespace KSharp.Compiler.TypeScript.Syntax;
 
 /// <summary>
-/// Base para elementos de classe
+/// Base for class elements
 /// </summary>
 public abstract record TsClassElement : TsSyntaxNode;

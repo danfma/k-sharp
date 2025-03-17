@@ -1,6 +1,6 @@
 namespace KSharp.Compiler.Syntax;
 
 /// <summary>
-/// Classe base para todas as expressões
+/// Base class for all expressions
 /// </summary>
 public abstract record KsExpressionSyntax : KsNodeSyntax;

@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 namespace KSharp.Compiler.TypeScript.Syntax;
 
 /// <summary>
-/// Declaração de classe
+/// Class declaration
 /// </summary>
 public record TsClassDeclaration(
     TsIdentifier Name,
