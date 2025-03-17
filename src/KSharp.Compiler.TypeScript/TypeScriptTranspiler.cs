@@ -79,6 +79,19 @@ public class TypeScriptTranspiler
             statements.Add(TranspileFunction(function));
         }
         
+        // If we have a Main function, add an invocation at the end of the file
+        if (module.Functions.Any(f => f.Name.Value == "Main"))
+        {
+            var mainCall = new TsExpressionStatement(
+                new TsFunctionCallExpression(
+                    new TsIdentifier("Main"),
+                    ImmutableArray<TsExpression>.Empty
+                )
+            );
+            
+            statements.Add(mainCall);
+        }
+        
         return new TsSourceFile(
             module.FullName.Name.Value + ".ts",  // FileName
             ImmutableArray<TsImportDeclaration>.Empty,  // Imports
@@ -100,6 +113,17 @@ public class TypeScriptTranspiler
             foreach (var function in module.Functions)
             {
                 yield return TranspileFunction(function);
+            }
+            
+            // If we have a Main function, add an invocation at the end of the file
+            if (module.Functions.Any(f => f.Name.Value == "Main"))
+            {
+                yield return new TsExpressionStatement(
+                    new TsFunctionCallExpression(
+                        new TsIdentifier("Main"),
+                        ImmutableArray<TsExpression>.Empty
+                    )
+                );
             }
         }
     }

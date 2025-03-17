@@ -103,6 +103,7 @@ namespace KSharp.Compiler.Syntax
             var returnStatement = new NonTerminal(NodeNames.ReturnStatement);
             var foreachStatement = new NonTerminal(NodeNames.ForeachStatement);
             var expressionStatement = new NonTerminal(NodeNames.ExpressionStatement);
+            var topLevelStatement = new NonTerminal(NodeNames.TopLevelStatement);
 
             var expression = new NonTerminal(NodeNames.Expression);
             var valueExpression = new NonTerminal(NodeNames.ValueExpression);
@@ -130,7 +131,9 @@ namespace KSharp.Compiler.Syntax
                 topLevelDeclaration
             );
 
-            topLevelDeclaration.Rule = funcDeclaration | varDeclaration;
+            topLevelDeclaration.Rule = funcDeclaration | varDeclaration | topLevelStatement;
+            
+            topLevelStatement.Rule = statement;
 
             funcDeclaration.Rule =
                 kwFun

@@ -104,8 +104,18 @@ public class TreeNodeTransformer
             NodeNames.VariableDeclaration => new GlobalVariableDeclarationSyntax(
                 ToVariableDeclaration(node)
             ),
+            NodeNames.TopLevelStatement => new GlobalStatementSyntax(
+                ToTopLevelStatement(node)
+            ),
             _ => throw new InvalidOperationException($"Unknown declaration type: {node.Term.Name}"),
         };
+    }
+    
+    private StatementSyntax ToTopLevelStatement(ParseTreeNode node)
+    {
+        AssertTerm(node, NodeNames.TopLevelStatement);
+        
+        return ToStatement(node.ChildNodes[0]);
     }
 
     private ImmutableList<DeclarationSyntax> ToDeclarationList(ParseTreeNode node)
@@ -271,6 +281,7 @@ public class TreeNodeTransformer
             NodeNames.Variable => ToVariable(node),
             NodeNames.Literal => ToLiteral(node),
             NodeNames.FunctionCall => ToInvocation(node),
+            NodeNames.Expression => ToExpression(node), // Handle expressions in parentheses
             _ => throw new InvalidOperationException(
                 $"Unknown value expression type: {node.Term.Name}"
             ),
@@ -408,6 +419,7 @@ public class TreeNodeTransformer
         public const string UsingDirective = nameof(UsingDirective);
         public const string TopLevelDeclarationList = nameof(TopLevelDeclarationList);
         public const string TopLevelDeclaration = nameof(TopLevelDeclaration);
+        public const string TopLevelStatement = nameof(TopLevelStatement);
         public const string NamespaceDeclaration = nameof(NamespaceDeclaration);
         public const string FunctionDeclaration = nameof(FunctionDeclaration);
         public const string VariableDeclaration = nameof(VariableDeclaration);

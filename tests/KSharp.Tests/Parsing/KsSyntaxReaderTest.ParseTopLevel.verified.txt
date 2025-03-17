@@ -1,0 +1,122 @@
+﻿{
+  FileName: Examples.TopLevel.ks,
+  Declarations: [
+    {
+      Statement: {
+        Expression: {
+          MethodName: {
+            Text: writeLine
+          },
+          Arguments: [
+            {
+              Value: Hello, World!
+            }
+          ]
+        }
+      }
+    },
+    {
+      Variable: {
+        Mutable: false,
+        Identifier: {
+          Text: a
+        },
+        Type: {},
+        Initializer: {
+          Value: 10
+        }
+      }
+    },
+    {
+      Variable: {
+        Mutable: false,
+        Identifier: {
+          Text: b
+        },
+        Type: {},
+        Initializer: {
+          Value: 20
+        }
+      }
+    },
+    {
+      Statement: {
+        Expression: {
+          MethodName: {
+            Text: writeLine
+          },
+          Arguments: [
+            {
+              Left: {
+                Identifier: {
+                  Text: a
+                }
+              },
+              Operator: {
+                Symbol: +
+              },
+              Right: {
+                Identifier: {
+                  Text: b
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      Statement: {
+        Condition: {
+          Left: {
+            Identifier: {
+              Text: a
+            }
+          },
+          Operator: {
+            Symbol: >
+          },
+          Right: {
+            Identifier: {
+              Text: b
+            }
+          }
+        },
+        ThenBlock: {
+          Statements: [
+            {
+              Expression: {
+                MethodName: {
+                  Text: writeLine
+                },
+                Arguments: [
+                  {
+                    Value: a is greater than b
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        Else: {
+          Block: {
+            Statements: [
+              {
+                Expression: {
+                  MethodName: {
+                    Text: writeLine
+                  },
+                  Arguments: [
+                    {
+                      Value: b is greater than or equal to a
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

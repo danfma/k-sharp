@@ -57,4 +57,21 @@ public class KsSyntaxReaderTest
 
         return Verify(sourceFile);
     }
+    
+    [Fact]
+    public Task ParseTopLevel()
+    {
+        const string FileName = "Examples.TopLevel.ks";
+
+        var code = SingleFileReader.Read(FileName);
+        var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
+
+        sourceFile.ShouldBeOfType<CompilationUnitSyntax>();
+        
+        // Verifica se existem declarações top-level
+        sourceFile.Declarations.ShouldNotBeEmpty();
+        sourceFile.Declarations.ShouldContain(d => d is GlobalStatementSyntax);
+
+        return Verify(sourceFile);
+    }
 }
