@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace KSharp.Tests.Examples;
+namespace KSharp.Tests;
 
 public static class SingleFileReader
 {

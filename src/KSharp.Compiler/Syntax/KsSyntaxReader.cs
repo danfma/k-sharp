@@ -1,7 +1,6 @@
 using Irony.Parsing;
-using KSharp.Compiler.Syntax;
 
-namespace KSharp.Compiler;
+namespace KSharp.Compiler.Syntax;
 
 /// <summary>
 /// Responsável por ler e analisar arquivos fonte K#, construindo as árvores sintáticas correspondentes

@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using KSharp.Compiler;
 using KSharp.Compiler.Syntax;
-using KSharp.Tests.Examples;
 
 namespace KSharp.Tests.Parsing;
 
@@ -10,7 +9,7 @@ public class KsSyntaxReaderTest
     [Fact]
     public Task ParseSum()
     {
-        const string FileName = "Sum.ks";
+        const string FileName = "Examples.Sum.ks";
 
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
@@ -23,7 +22,7 @@ public class KsSyntaxReaderTest
     [Fact]
     public Task ParseFactorial()
     {
-        const string FileName = "Factorial.ks";
+        const string FileName = "Examples.Factorial.ks";
 
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
@@ -36,7 +35,7 @@ public class KsSyntaxReaderTest
     [Fact]
     public Task ParseFibonacci()
     {
-        const string FileName = "Fibonacci.ks";
+        const string FileName = "Examples.Fibonacci.ks";
 
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
@@ -49,7 +48,7 @@ public class KsSyntaxReaderTest
     [Fact]
     public Task ParseFizzBuzz()
     {
-        const string FileName = "FizzBuzz.ks";
+        const string FileName = "Examples.FizzBuzz.ks";
 
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);

@@ -1,7 +1,7 @@
 using Irony.Parsing;
 using static KSharp.Compiler.Syntax.TreeNodeTransformer;
 
-namespace KSharp.Compiler
+namespace KSharp.Compiler.Syntax
 {
     // Definição da gramática K# usando Irony
     public class KsGrammar : Grammar

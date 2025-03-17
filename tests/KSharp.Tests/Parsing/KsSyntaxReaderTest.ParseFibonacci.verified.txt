@@ -1,5 +1,5 @@
 ﻿{
-  FileName: Fibonacci.ks,
+  FileName: Examples.Fibonacci.ks,
   Declarations: [
     {
       Function: {

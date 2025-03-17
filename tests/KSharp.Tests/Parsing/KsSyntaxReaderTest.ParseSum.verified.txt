@@ -1,5 +1,5 @@
 ﻿{
-  FileName: Sum.ks,
+  FileName: Examples.Sum.ks,
   Declarations: [
     {
       Function: {

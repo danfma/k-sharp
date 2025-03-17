@@ -28,6 +28,8 @@
 
     <ItemGroup>
       <EmbeddedResource Include="Examples\*.ks" />
+      <EmbeddedResource Include="IR\**\*.ks" />
+      <EmbeddedResource Include="IR\**\*.ts" />
     </ItemGroup>
 
 </Project>

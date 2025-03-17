@@ -1,5 +1,5 @@
 ﻿{
-  FileName: FizzBuzz.ks,
+  FileName: Examples.FizzBuzz.ks,
   Declarations: [
     {
       Function: {

@@ -1,4 +1,4 @@
-namespace KSharp.Compiler;
+namespace KSharp.Compiler.Syntax;
 
 /// <summary>
 /// Exceção lançada quando ocorre um erro de compilação
