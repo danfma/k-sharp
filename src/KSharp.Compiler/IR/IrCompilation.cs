@@ -12,11 +12,9 @@ public record IrCompilation : IrNode
     public ImmutableList<IrCompilationUnit> SourceFiles { get; init; } = [];
     public ImmutableList<IrModule> Modules { get; init; } = [];
     public ImmutableList<IrType> Types { get; init; } = [];
-    
-    public IrCompilation()
-    {
-    }
-    
+
+    public IrCompilation() { }
+
     public IrCompilation(string name)
     {
         Name = name;

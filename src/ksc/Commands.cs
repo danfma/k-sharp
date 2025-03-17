@@ -3,6 +3,7 @@ using System.Diagnostics;
 using KSharp.Compiler.IR;
 using KSharp.Compiler.Syntax;
 using KSharp.Compiler.TypeScript;
+using KSharp.Compiler.Utils;
 
 namespace KSharp.Compiler;
 
@@ -69,6 +70,8 @@ public class Commands
         bool generateTsConfig
     )
     {
+        var timeTracker = TimeTracker.Start();
+
         // Create output directory if it doesn't exist
         Directory.CreateDirectory(outputPath);
 
@@ -80,7 +83,9 @@ public class Commands
             throw new FileNotFoundException($"No K# source files (*.ks) found in {inputPath}");
         }
 
-        Console.WriteLine($"Found {sourceFiles.Length} K# source files");
+        Console.WriteLine(
+            $"Found {sourceFiles.Length} K# source files in {timeTracker.GetElapsedTime(reset: true).TotalMilliseconds} ms"
+        );
 
         // Read and parse each source file
         var syntaxReader = new KsSyntaxReader();
@@ -89,10 +94,12 @@ public class Commands
         foreach (var sourceFile in sourceFiles)
         {
             var relativePath = Path.GetRelativePath(inputPath, sourceFile);
+
             Console.WriteLine($"Parsing {relativePath}");
 
             var sourceContent = await File.ReadAllTextAsync(sourceFile);
             var syntaxNode = syntaxReader.ReadSourceFromString(sourceContent, relativePath);
+
             compilationUnits.Add(syntaxNode);
         }
 
@@ -100,6 +107,7 @@ public class Commands
         var projectName = Path.GetFileName(
             inputPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
         );
+
         var compilation = new CompilationSyntax
         {
             Name = new IdentifierTokenSyntax(projectName),
@@ -107,31 +115,53 @@ public class Commands
             SourceFiles = compilationUnits.ToImmutableList(),
         };
 
+        // Print elapsed time for parsing
+        Console.WriteLine(
+            $"Parsed all source files in {timeTracker.GetElapsedTime(reset: true).TotalMilliseconds} ms"
+        );
+
         // Transform to IR
         Console.WriteLine("Generating intermediate representation (IR)");
+
         var transformer = new SyntaxTransformer();
         var irCompilation = transformer.Transform(compilation);
 
+        Console.WriteLine(
+            $"Generated intermediate representation in {timeTracker.GetElapsedTime(reset: true).TotalMilliseconds} ms"
+        );
+
         // Transpile to TypeScript
         Console.WriteLine("Transpiling to TypeScript");
+
         var tsTranspiler = new TypeScriptTranspiler();
         var tsFiles = tsTranspiler.Transpile(irCompilation);
 
+        Console.WriteLine(
+            $"Generating TypeScript AST in {timeTracker.GetElapsedTime(reset: true).TotalMilliseconds} ms"
+        );
+
         // Write output files
         Console.WriteLine("Writing TypeScript files");
-        foreach (var (filePath, tsSourceFile) in tsFiles)
+
+        foreach (var (filePath, tsSourceFile) in tsFiles.AsParallel())
         {
             var outputFilePath = Path.Combine(outputPath, filePath);
             var tsCode = tsSourceFile.ToTypeScript();
 
             // Create directory if needed
             var directory = Path.GetDirectoryName(outputFilePath);
+
             if (!string.IsNullOrEmpty(directory))
                 Directory.CreateDirectory(directory);
 
             await File.WriteAllTextAsync(outputFilePath, tsCode);
+
             Console.WriteLine($"Written: {outputFilePath}");
         }
+
+        Console.WriteLine(
+            $"TypeScript files written in {timeTracker.GetElapsedTime(reset: true).TotalMilliseconds} ms"
+        );
 
         // Create package.json only if requested
         if (generatePackageJson)

@@ -9,11 +9,9 @@ public record IrCompilationUnit : IrNode
 {
     public required string FilePath { get; init; }
     public ImmutableList<IrDeclaration> Declarations { get; init; } = [];
-    
-    public IrCompilationUnit()
-    {
-    }
-    
+
+    public IrCompilationUnit() { }
+
     public IrCompilationUnit(string filePath)
     {
         FilePath = filePath;

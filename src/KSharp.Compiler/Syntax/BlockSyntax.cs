@@ -5,5 +5,4 @@ namespace KSharp.Compiler.Syntax;
 /// <summary>
 /// Represents a code block delimited by braces
 /// </summary>
-public sealed record BlockSyntax(ImmutableList<StatementSyntax> Statements)
-    : StatementSyntax;
+public sealed record BlockSyntax(ImmutableList<StatementSyntax> Statements) : StatementSyntax;

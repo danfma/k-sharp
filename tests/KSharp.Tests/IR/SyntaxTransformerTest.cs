@@ -66,7 +66,7 @@ public class SyntaxTransformerTest
         binaryExpression.Operator.ShouldBe(IrIntrinsicOperator.Plus);
         binaryExpression.Right.ShouldBe(new IrLiteralExpression(2));
     }
-    
+
     [Fact]
     public void Transform_TopLevelProject()
     {
@@ -103,28 +103,28 @@ public class SyntaxTransformerTest
         module.FullName.Namespace.Value.ShouldBe("TopLevel");
         module.FullName.AssemblyRef.ShouldBe(new IrAssemblyReference("TopLevel"));
         module.FullName.FullName.ShouldBe("TopLevel:TopLevel:ProgramKs");
-        
+
         // Should have a Main function with the top-level statements
         module.Functions.Count.ShouldBe(1);
         var mainFunction = module.Functions.First();
         mainFunction.Name.Value.ShouldBe("Main");
-        
+
         // Main function should have statements
         mainFunction.Body.Statements.Count.ShouldBeGreaterThan(0);
         mainFunction.Body.Statements[0].ShouldBeOfType<IrExpressionStatement>();
-        
+
         // Check for if statement
         mainFunction.Body.Statements.ShouldContain(s => s is IrIfStatement);
-        
+
         // Should have variables a and b
         module.Variables.Count.ShouldBe(2);
         var a = module.Variables.First(x => x.Name.Value == "a");
         var b = module.Variables.First(x => x.Name.Value == "b");
-        
+
         a.Initializer.ShouldNotBeNull();
         a.Initializer.ShouldBeOfType<IrLiteralExpression>();
         ((IrLiteralExpression)a.Initializer).Value.ShouldBe(10);
-        
+
         b.Initializer.ShouldNotBeNull();
         b.Initializer.ShouldBeOfType<IrLiteralExpression>();
         ((IrLiteralExpression)b.Initializer).Value.ShouldBe(20);

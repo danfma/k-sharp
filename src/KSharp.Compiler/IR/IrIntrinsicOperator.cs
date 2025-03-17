@@ -12,7 +12,7 @@ public record IrIntrinsicOperator(string Symbol) : IrOperator(Symbol), IIntrinsi
     public static readonly IrIntrinsicOperator Multiply = new("*");
     public static readonly IrIntrinsicOperator Divide = new("/");
     public static readonly IrIntrinsicOperator Modulo = new("%");
-    
+
     // Comparison operators
     public static readonly IrIntrinsicOperator Equal = new("==");
     public static readonly IrIntrinsicOperator NotEqual = new("!=");
@@ -20,12 +20,12 @@ public record IrIntrinsicOperator(string Symbol) : IrOperator(Symbol), IIntrinsi
     public static readonly IrIntrinsicOperator LessThanOrEqual = new("<=");
     public static readonly IrIntrinsicOperator GreaterThan = new(">");
     public static readonly IrIntrinsicOperator GreaterThanOrEqual = new(">=");
-    
+
     // Logical operators
     public static readonly IrIntrinsicOperator And = new("&&");
     public static readonly IrIntrinsicOperator Or = new("||");
-    
-    // Bitwise operators  
+
+    // Bitwise operators
     public static readonly IrIntrinsicOperator BitwiseAnd = new("&");
     public static readonly IrIntrinsicOperator BitwiseOr = new("|");
     public static readonly IrIntrinsicOperator BitwiseXor = new("^");

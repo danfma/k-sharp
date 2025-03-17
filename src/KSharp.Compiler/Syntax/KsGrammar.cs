@@ -132,7 +132,7 @@ namespace KSharp.Compiler.Syntax
             );
 
             topLevelDeclaration.Rule = funcDeclaration | varDeclaration | topLevelStatement;
-            
+
             topLevelStatement.Rule = statement;
 
             funcDeclaration.Rule =

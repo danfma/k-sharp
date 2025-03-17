@@ -57,7 +57,7 @@ public class KsSyntaxReaderTest
 
         return Verify(sourceFile);
     }
-    
+
     [Fact]
     public Task ParseTopLevel()
     {
@@ -67,7 +67,7 @@ public class KsSyntaxReaderTest
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
 
         sourceFile.ShouldBeOfType<CompilationUnitSyntax>();
-        
+
         // Verifica se existem declarações top-level
         sourceFile.Declarations.ShouldNotBeEmpty();
         sourceFile.Declarations.ShouldContain(d => d is GlobalStatementSyntax);

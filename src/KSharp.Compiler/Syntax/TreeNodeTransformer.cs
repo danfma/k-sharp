@@ -104,17 +104,15 @@ public class TreeNodeTransformer
             NodeNames.VariableDeclaration => new GlobalVariableDeclarationSyntax(
                 ToVariableDeclaration(node)
             ),
-            NodeNames.TopLevelStatement => new GlobalStatementSyntax(
-                ToTopLevelStatement(node)
-            ),
+            NodeNames.TopLevelStatement => new GlobalStatementSyntax(ToTopLevelStatement(node)),
             _ => throw new InvalidOperationException($"Unknown declaration type: {node.Term.Name}"),
         };
     }
-    
+
     private StatementSyntax ToTopLevelStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.TopLevelStatement);
-        
+
         return ToStatement(node.ChildNodes[0]);
     }
 

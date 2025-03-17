@@ -16,6 +16,6 @@ public record IrFullName
         Namespace = @namespace;
         Name = name;
     }
-    
+
     public override string ToString() => FullName;
 }

@@ -5,6 +5,5 @@ namespace KSharp.Compiler.Syntax;
 /// </summary>
 public record IdentifierTokenSyntax(string Text) : SyntaxNode
 {
-    public static implicit operator string(IdentifierTokenSyntax identifier) =>
-        identifier.Text;
+    public static implicit operator string(IdentifierTokenSyntax identifier) => identifier.Text;
 }
