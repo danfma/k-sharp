@@ -29,7 +29,7 @@ public class KsCompiler
     /// <param name="fileName">File name</param>
     /// <returns>AST representing the code</returns>
     /// <exception cref="CompilationException">Thrown when there is a compilation error</exception>
-    public KsSourceFileSyntax ParseSource(string code, string fileName)
+    public CompilationUnitSyntax ParseSource(string code, string fileName)
     {
         var parseTree = _parser.Parse(code);
 

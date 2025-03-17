@@ -17,30 +17,30 @@ public class SyntaxTransformerTest
             "Program.ks"
         );
 
-        var projectNode = new KsProjectSyntax
+        var projectNode = new CompilationSyntax
         {
-            Name = new KsIdentifierSyntax("Vars"),
+            Name = new IdentifierTokenSyntax("Vars"),
             RootDirectory = "/samples/Vars",
             SourceFiles = [syntaxNode],
         };
 
-        var ksNode = new SyntaxTransformer().Transform(projectNode);
+        var irNode = new SyntaxTransformer().Transform(projectNode);
 
-        ksNode.ShouldNotBeNull();
-        ksNode.ShouldBeOfType<KsProject>();
-        ksNode.Name.ShouldBe("Vars");
-        ksNode.RootNamespace.Value.ShouldBe("Vars");
-        ksNode.SourceFiles.Count.ShouldBe(1);
-        ksNode.SourceFiles.First().FilePath.ShouldBe("/samples/Vars/Program.ks");
-        ksNode.Types.ShouldBeEmpty();
-        ksNode.Modules.Count.ShouldBe(1);
+        irNode.ShouldNotBeNull();
+        irNode.ShouldBeOfType<IrCompilation>();
+        irNode.Name.ShouldBe("Vars");
+        irNode.RootNamespace.Value.ShouldBe("Vars");
+        irNode.SourceFiles.Count.ShouldBe(1);
+        irNode.SourceFiles.First().FilePath.ShouldBe("/samples/Vars/Program.ks");
+        irNode.Types.ShouldBeEmpty();
+        irNode.Modules.Count.ShouldBe(1);
 
-        var module = ksNode.Modules.First(x => x.FullName.Name == "ProgramKs");
+        var module = irNode.Modules.First(x => x.FullName.Name == "ProgramKs");
 
         module.ShouldNotBeNull();
         module.FullName.Name.Value.ShouldBe("ProgramKs");
         module.FullName.Namespace.Value.ShouldBe("Vars");
-        module.FullName.AssemblyRef.ShouldBe(new KsAssemblyReference("Vars"));
+        module.FullName.AssemblyRef.ShouldBe(new IrAssemblyReference("Vars"));
         module.FullName.FullName.ShouldBe("Vars:Vars:ProgramKs");
         module.Functions.Count.ShouldBe(0);
         module.Variables.Count.ShouldBe(3);
@@ -50,20 +50,20 @@ public class SyntaxTransformerTest
         var c = module.Variables.First(x => x.Name.Value == "c");
 
         a.Initializer.ShouldNotBeNull();
-        a.Initializer.ShouldBeOfType<KsLiteralExpression>();
-        ((KsLiteralExpression)a.Initializer).Value.ShouldBe(1);
+        a.Initializer.ShouldBeOfType<IrLiteralExpression>();
+        ((IrLiteralExpression)a.Initializer).Value.ShouldBe(1);
 
         b.Initializer.ShouldNotBeNull();
-        b.Initializer.ShouldBeOfType<KsLiteralExpression>();
-        ((KsLiteralExpression)b.Initializer).Value.ShouldBe(2);
+        b.Initializer.ShouldBeOfType<IrLiteralExpression>();
+        ((IrLiteralExpression)b.Initializer).Value.ShouldBe(2);
 
         c.Initializer.ShouldNotBeNull();
-        c.Initializer.ShouldBeOfType<KsBinaryExpression>();
+        c.Initializer.ShouldBeOfType<IrBinaryExpression>();
 
-        var binaryExpression = (KsBinaryExpression)c.Initializer;
+        var binaryExpression = (IrBinaryExpression)c.Initializer;
 
-        binaryExpression.Left.ShouldBeOfType<KsLiteralExpression>();
-        binaryExpression.Operator.ShouldBe(KsIntrinsicOperator.Plus);
-        binaryExpression.Right.ShouldBe(new KsLiteralExpression(2));
+        binaryExpression.Left.ShouldBeOfType<IrLiteralExpression>();
+        binaryExpression.Operator.ShouldBe(IrIntrinsicOperator.Plus);
+        binaryExpression.Right.ShouldBe(new IrLiteralExpression(2));
     }
 }

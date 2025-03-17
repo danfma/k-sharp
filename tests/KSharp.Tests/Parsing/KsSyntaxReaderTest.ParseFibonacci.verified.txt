@@ -2,25 +2,25 @@
   FileName: Examples.Fibonacci.ks,
   Declarations: [
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: fibonacci
+          Text: fibonacci
         },
         Parameters: [
           {
-            Name: {
-              Name: n
+            Identifier: {
+              Text: n
             },
             Type: {
-              Identifier: {
-                Name: UInt
+              TypeName: {
+                Text: UInt
               }
             }
           }
         ],
         ReturnType: {
-          Identifier: {
-            Name: UInt
+          TypeName: {
+            Text: UInt
           }
         },
         Body: {
@@ -28,8 +28,8 @@
             {
               Condition: {
                 Left: {
-                  Name: {
-                    Name: n
+                  Identifier: {
+                    Text: n
                   }
                 },
                 Operator: {
@@ -39,12 +39,12 @@
                   Value: 1
                 }
               },
-              Block: {
+              ThenBlock: {
                 Statements: [
                   {
                     Expression: {
-                      Name: {
-                        Name: n
+                      Identifier: {
+                        Text: n
                       }
                     }
                   }
@@ -54,14 +54,14 @@
             {
               Expression: {
                 Left: {
-                  Name: {
-                    Name: fibonacci
+                  MethodName: {
+                    Text: fibonacci
                   },
                   Arguments: [
                     {
                       Left: {
-                        Name: {
-                          Name: n
+                        Identifier: {
+                          Text: n
                         }
                       },
                       Operator: {
@@ -77,14 +77,14 @@
                   Symbol: +
                 },
                 Right: {
-                  Name: {
-                    Name: fibonacci
+                  MethodName: {
+                    Text: fibonacci
                   },
                   Arguments: [
                     {
                       Left: {
-                        Name: {
-                          Name: n
+                        Identifier: {
+                          Text: n
                         }
                       },
                       Operator: {

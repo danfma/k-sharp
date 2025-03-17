@@ -2,35 +2,35 @@
   FileName: Examples.Sum.ks,
   Declarations: [
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: sum
+          Text: sum
         },
         Parameters: [
           {
-            Name: {
-              Name: a
+            Identifier: {
+              Text: a
             },
             Type: {
-              Identifier: {
-                Name: Int
+              TypeName: {
+                Text: Int
               }
             }
           },
           {
-            Name: {
-              Name: b
+            Identifier: {
+              Text: b
             },
             Type: {
-              Identifier: {
-                Name: Int
+              TypeName: {
+                Text: Int
               }
             }
           }
         ],
         ReturnType: {
-          Identifier: {
-            Name: Int
+          TypeName: {
+            Text: Int
           }
         },
         Body: {
@@ -38,16 +38,16 @@
             {
               Expression: {
                 Left: {
-                  Name: {
-                    Name: a
+                  Identifier: {
+                    Text: a
                   }
                 },
                 Operator: {
                   Symbol: +
                 },
                 Right: {
-                  Name: {
-                    Name: b
+                  Identifier: {
+                    Text: b
                   }
                 }
               }
@@ -57,21 +57,21 @@
       }
     },
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: main
+          Text: main
         },
         ReturnType: {},
         Body: {
           Statements: [
             {
               Mutable: false,
-              Name: {
-                Name: a
+              Identifier: {
+                Text: a
               },
               Type: {
-                Identifier: {
-                  Name: Int
+                TypeName: {
+                  Text: Int
                 }
               },
               Initializer: {
@@ -80,12 +80,12 @@
             },
             {
               Mutable: false,
-              Name: {
-                Name: b
+              Identifier: {
+                Text: b
               },
               Type: {
-                Identifier: {
-                  Name: Int
+                TypeName: {
+                  Text: Int
                 }
               },
               Initializer: {
@@ -94,23 +94,23 @@
             },
             {
               Mutable: false,
-              Name: {
-                Name: result
+              Identifier: {
+                Text: result
               },
               Type: {},
               Initializer: {
-                Name: {
-                  Name: sum
+                MethodName: {
+                  Text: sum
                 },
                 Arguments: [
                   {
-                    Name: {
-                      Name: a
+                    Identifier: {
+                      Text: a
                     }
                   },
                   {
-                    Name: {
-                      Name: b
+                    Identifier: {
+                      Text: b
                     }
                   }
                 ]
@@ -118,13 +118,13 @@
             },
             {
               Expression: {
-                Name: {
-                  Name: writeLine
+                MethodName: {
+                  Text: writeLine
                 },
                 Arguments: [
                   {
-                    Name: {
-                      Name: result
+                    Identifier: {
+                      Text: result
                     }
                   }
                 ]

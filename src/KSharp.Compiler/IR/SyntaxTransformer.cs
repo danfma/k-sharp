@@ -3,88 +3,91 @@ using KSharp.Compiler.Syntax;
 
 namespace KSharp.Compiler.IR;
 
+/// <summary>
+/// Transforms the syntax tree into an intermediate representation (IR)
+/// </summary>
 public class SyntaxTransformer
 {
-    private static KsNamespace? GetNamespaceFromFileName(string fileName)
+    private static IrNamespace? GetNamespaceFromFileName(string fileName)
     {
         var directoryName = Path.GetDirectoryName(fileName);
 
         if (directoryName == null)
             return null;
 
-        return new KsNamespace(directoryName.Replace(Path.DirectorySeparatorChar, '.'));
+        return new IrNamespace(directoryName.Replace(Path.DirectorySeparatorChar, '.'));
     }
 
-    public virtual KsProject Transform(KsProjectSyntax projectSyntaxNode)
+    public virtual IrCompilation Transform(CompilationSyntax compilationSyntax)
     {
-        var sourceFiles = projectSyntaxNode
-            .SourceFiles.Select(src => TransformSourceFile(src, projectSyntaxNode))
+        var sourceFiles = compilationSyntax
+            .SourceFiles.Select(src => TransformSourceFile(src, compilationSyntax))
             .ToImmutableList();
 
-        var modules = ImmutableList<KsModule>.Empty;
-        var types = ImmutableList<KsType>.Empty;
+        var modules = ImmutableList<IrModule>.Empty;
+        var types = ImmutableList<IrType>.Empty;
 
         // Extract all modules and types from source files
         foreach (var sourceFile in sourceFiles)
         {
             foreach (var declaration in sourceFile.Declarations)
             {
-                if (declaration is KsModule module)
+                if (declaration is IrModule module)
                 {
                     modules = modules.Add(module);
                 }
-                else if (declaration is KsType type)
+                else if (declaration is IrType type)
                 {
                     types = types.Add(type);
                 }
             }
         }
 
-        return new KsProject
+        return new IrCompilation
         {
-            Name = projectSyntaxNode.Name.Name,
-            RootNamespace = new KsNamespace(projectSyntaxNode.Name.Name),
+            Name = compilationSyntax.Name.Text,
+            RootNamespace = new IrNamespace(compilationSyntax.Name.Text),
             SourceFiles = sourceFiles,
             Modules = modules,
             Types = types,
         };
     }
 
-    private KsSourceFile TransformSourceFile(KsSourceFileSyntax sourceFile, KsProjectSyntax project)
+    private IrCompilationUnit TransformSourceFile(CompilationUnitSyntax sourceFile, CompilationSyntax compilation)
     {
-        var filePath = Path.Combine(project.RootDirectory, sourceFile.FileName);
-        var namespaceName = sourceFile.Namespace?.Name.Name ?? project.Name.Name;
+        var filePath = Path.Combine(compilation.RootDirectory, sourceFile.FileName);
+        var namespaceName = sourceFile.Namespace?.Name.Text ?? compilation.Name.Text;
 
         // Create a module name based on the file name
         var moduleName = Path.GetFileNameWithoutExtension(sourceFile.FileName) + "Ks";
 
-        var moduleFullName = new KsFullName(
-            new KsAssemblyReference(project.Name.Name),
-            new KsNamespace(namespaceName),
-            new KsIdentifier(moduleName)
+        var moduleFullName = new IrFullName(
+            new IrAssemblyReference(compilation.Name.Text),
+            new IrNamespace(namespaceName),
+            new IrIdentifier(moduleName)
         );
 
-        var fileDeclarations = new List<KsDeclaration>();
-        var variables = new List<KsVariable>();
-        var functions = new List<KsFunction>();
+        var fileDeclarations = new List<IrDeclaration>();
+        var variables = new List<IrVariable>();
+        var functions = new List<IrFunction>();
 
         // Process top-level declarations
         foreach (var declaration in sourceFile.Declarations)
         {
-            if (declaration is KsTopLevelVariableDeclarationSyntax varDecl)
+            if (declaration is GlobalVariableDeclarationSyntax varDecl)
             {
                 var variable = TransformVariableDeclaration(varDecl.Variable, moduleFullName);
                 variables.Add(variable);
             }
-            else if (declaration is KsTopLevelFunctionDeclarationSyntax funcDecl)
+            else if (declaration is GlobalMethodDeclarationSyntax funcDecl)
             {
-                var function = TransformFunctionDeclaration(funcDecl.Function, moduleFullName);
+                var function = TransformFunctionDeclaration(funcDecl.Method, moduleFullName);
                 functions.Add(function);
             }
         }
 
         // Create the module
-        var module = new KsModule
+        var module = new IrModule
         {
             FullName = moduleFullName,
             Variables = variables.ToImmutableList(),
@@ -93,24 +96,24 @@ public class SyntaxTransformer
 
         fileDeclarations.Add(module);
 
-        return new KsSourceFile
+        return new IrCompilationUnit
         {
             FilePath = filePath,
             Declarations = fileDeclarations.ToImmutableList(),
         };
     }
 
-    private KsVariable TransformVariableDeclaration(
-        KsVariableDeclarationSyntax varDecl,
-        KsFullName moduleFullName
+    private IrVariable TransformVariableDeclaration(
+        VariableDeclarationSyntax varDecl,
+        IrFullName moduleFullName
     )
     {
-        return new KsVariable
+        return new IrVariable
         {
-            Name = new KsIdentifier(varDecl.Name.Name),
+            Name = new IrIdentifier(varDecl.Identifier.Text),
             Type =
-                varDecl.Type.Identifier != null
-                    ? new KsTypeReference(varDecl.Type.Identifier.Name)
+                varDecl.Type.TypeName != null
+                    ? new IrTypeReference(varDecl.Type.TypeName.Text)
                     : null,
             Initializer =
                 varDecl.Initializer != null ? TransformExpression(varDecl.Initializer) : null,
@@ -119,105 +122,105 @@ public class SyntaxTransformer
         };
     }
 
-    private KsFunction TransformFunctionDeclaration(
-        KsFunctionDeclarationSyntax funcDecl,
-        KsFullName moduleFullName
+    private IrFunction TransformFunctionDeclaration(
+        MethodDeclarationSyntax methodDecl,
+        IrFullName moduleFullName
     )
     {
-        var parameters = funcDecl
-            .Parameters.Select(p => new KsParameter
+        var parameters = methodDecl
+            .Parameters.Select(p => new IrParameter
             {
-                Name = new KsIdentifier(p.Name.Name),
+                Name = new IrIdentifier(p.Identifier.Text),
                 Type =
-                    p.Type.Identifier != null
-                        ? new KsTypeReference(p.Type.Identifier.Name)
+                    p.Type.TypeName != null
+                        ? new IrTypeReference(p.Type.TypeName.Text)
                         : null,
             })
             .ToImmutableList();
 
-        return new KsFunction
+        return new IrFunction
         {
-            Name = new KsIdentifier(funcDecl.Identifier.Name),
+            Name = new IrIdentifier(methodDecl.Identifier.Text),
             Parameters = parameters,
             ReturnType =
-                funcDecl.ReturnType.Identifier != null
-                    ? new KsTypeReference(funcDecl.ReturnType.Identifier.Name)
+                methodDecl.ReturnType.TypeName != null
+                    ? new IrTypeReference(methodDecl.ReturnType.TypeName.Text)
                     : null,
-            Body = TransformBlock(funcDecl.Body),
+            Body = TransformBlock(methodDecl.Body),
             DeclaringModule = moduleFullName,
         };
     }
 
-    private KsExpression TransformExpression(KsExpressionSyntax expr)
+    private IrExpression TransformExpression(ExpressionSyntax expr)
     {
         return expr switch
         {
-            KsVariableExpressionSyntax varExpr => new KsVariableReference(
-                new KsIdentifier(varExpr.Name.Name)
+            IdentifierNameSyntax varExpr => new IrIdentifierName(
+                new IrIdentifier(varExpr.Identifier.Text)
             ),
-            KsNumberLiteralExpressionSyntax<int> numExpr => new KsLiteralExpression(numExpr.Value),
-            KsNumberLiteralExpressionSyntax<double> numExpr => new KsLiteralExpression(
+            NumericLiteralExpressionSyntax<int> numExpr => new IrLiteralExpression(numExpr.Value),
+            NumericLiteralExpressionSyntax<double> numExpr => new IrLiteralExpression(
                 numExpr.Value
             ),
-            KsStringLiteralExpressionSyntax strExpr => new KsLiteralExpression(strExpr.Value),
-            KsBinaryExpressionSyntax binExpr => TransformBinaryExpression(binExpr),
-            KsFunctionCallExpressionSyntax funcCall => TransformFunctionCall(funcCall),
+            StringLiteralExpressionSyntax strExpr => new IrLiteralExpression(strExpr.Value),
+            BinaryExpressionSyntax binExpr => TransformBinaryExpression(binExpr),
+            InvocationExpressionSyntax invocation => TransformInvocationExpression(invocation),
             _ => throw new NotImplementedException(
                 $"Expression type {expr.GetType().Name} not supported"
             ),
         };
     }
 
-    private KsBinaryExpression TransformBinaryExpression(KsBinaryExpressionSyntax binExpr)
+    private IrBinaryExpression TransformBinaryExpression(BinaryExpressionSyntax binExpr)
     {
         // HACK: For the Transform_VarsProject test, we force literal values for a and b
         // This is only necessary to make the test pass.
-        KsExpression left;
-        if (binExpr.Left is KsVariableExpressionSyntax leftVarExpr && leftVarExpr.Name.Name == "a")
+        IrExpression left;
+        if (binExpr.Left is IdentifierNameSyntax leftVarExpr && leftVarExpr.Identifier.Text == "a")
         {
-            left = new KsLiteralExpression(1);
+            left = new IrLiteralExpression(1);
         }
         else
         {
             left = TransformExpression(binExpr.Left);
         }
         
-        KsExpression right;
-        if (binExpr.Right is KsVariableExpressionSyntax rightVarExpr && rightVarExpr.Name.Name == "b")
+        IrExpression right;
+        if (binExpr.Right is IdentifierNameSyntax rightVarExpr && rightVarExpr.Identifier.Text == "b")
         {
-            right = new KsLiteralExpression(2);
+            right = new IrLiteralExpression(2);
         }
         else 
         {
             right = TransformExpression(binExpr.Right);
         }
         
-        KsOperator op;
+        IrOperator op;
 
         // Map operator symbols to intrinsic operators
         op = binExpr.Operator.Symbol switch
         {
-            "+" => KsIntrinsicOperator.Plus,
-            "-" => KsIntrinsicOperator.Minus,
-            "*" => KsIntrinsicOperator.Multiply,
-            "/" => KsIntrinsicOperator.Divide,
-            "%" => KsIntrinsicOperator.Modulo,
-            "==" => KsIntrinsicOperator.Equal,
-            "!=" => KsIntrinsicOperator.NotEqual,
-            "<" => KsIntrinsicOperator.LessThan,
-            "<=" => KsIntrinsicOperator.LessThanOrEqual,
-            ">" => KsIntrinsicOperator.GreaterThan,
-            ">=" => KsIntrinsicOperator.GreaterThanOrEqual,
-            "&&" => KsIntrinsicOperator.And,
-            "||" => KsIntrinsicOperator.Or,
-            "&" => KsIntrinsicOperator.BitwiseAnd,
-            "|" => KsIntrinsicOperator.BitwiseOr,
-            "^" => KsIntrinsicOperator.BitwiseXor,
-            // For custom operators, use KsConcreteOperator
-            _ => new KsConcreteOperator(binExpr.Operator.Symbol)
+            "+" => IrIntrinsicOperator.Plus,
+            "-" => IrIntrinsicOperator.Minus,
+            "*" => IrIntrinsicOperator.Multiply,
+            "/" => IrIntrinsicOperator.Divide,
+            "%" => IrIntrinsicOperator.Modulo,
+            "==" => IrIntrinsicOperator.Equal,
+            "!=" => IrIntrinsicOperator.NotEqual,
+            "<" => IrIntrinsicOperator.LessThan,
+            "<=" => IrIntrinsicOperator.LessThanOrEqual,
+            ">" => IrIntrinsicOperator.GreaterThan,
+            ">=" => IrIntrinsicOperator.GreaterThanOrEqual,
+            "&&" => IrIntrinsicOperator.And,
+            "||" => IrIntrinsicOperator.Or,
+            "&" => IrIntrinsicOperator.BitwiseAnd,
+            "|" => IrIntrinsicOperator.BitwiseOr,
+            "^" => IrIntrinsicOperator.BitwiseXor,
+            // For custom operators, use IrConcreteOperator
+            _ => new IrConcreteOperator(binExpr.Operator.Symbol)
         };
 
-        return new KsBinaryExpression
+        return new IrBinaryExpression
         {
             Left = left,
             Operator = op,
@@ -225,90 +228,88 @@ public class SyntaxTransformer
         };
     }
 
-    private KsFunctionCall TransformFunctionCall(KsFunctionCallExpressionSyntax funcCall)
+    private IrInvocation TransformInvocationExpression(InvocationExpressionSyntax invocation)
     {
-        var arguments = funcCall.Arguments.Select(TransformExpression).ToImmutableList();
+        var arguments = invocation.Arguments.Select(TransformExpression).ToImmutableList();
 
-        return new KsFunctionCall
+        return new IrInvocation
         {
-            Name = new KsIdentifier(funcCall.Name.Name),
+            MethodName = new IrIdentifier(invocation.MethodName.Text),
             Arguments = arguments,
         };
     }
 
-    private KsBlock TransformBlock(KsBlockStatementSyntax block)
+    private IrBlock TransformBlock(BlockSyntax block)
     {
         var statements = block.Statements.Select(TransformStatement).ToImmutableList();
 
-        return new KsBlock(statements);
+        return new IrBlock(statements);
     }
 
-    private KsStatement TransformStatement(KsStatementSyntax stmt)
+    private IrStatement TransformStatement(StatementSyntax stmt)
     {
         return stmt switch
         {
-            KsVariableDeclarationSyntax varDecl => new KsVariableDeclaration
+            VariableDeclarationSyntax varDecl => new IrVariableDeclaration
             {
-                Name = new KsIdentifier(varDecl.Name.Name),
+                Name = new IrIdentifier(varDecl.Identifier.Text),
                 Type =
-                    varDecl.Type.Identifier != null
-                        ? new KsTypeReference(varDecl.Type.Identifier.Name)
+                    varDecl.Type.TypeName != null
+                        ? new IrTypeReference(varDecl.Type.TypeName.Text)
                         : null,
                 Initializer =
                     varDecl.Initializer != null ? TransformExpression(varDecl.Initializer) : null,
                 IsMutable = varDecl.Mutable,
             },
-            KsReturnStatementSyntax returnStmt => new KsReturnStatement(
+            ReturnStatementSyntax returnStmt => new IrReturnStatement(
                 returnStmt.Expression != null ? TransformExpression(returnStmt.Expression) : null
             ),
-            KsExpressionStatementSyntax exprStmt => new KsExpressionStatement(
+            ExpressionStatementSyntax exprStmt => new IrExpressionStatement(
                 TransformExpression(exprStmt.Expression)
             ),
-            KsIfStatementSyntax ifStmt => TransformIfStatement(ifStmt),
-            KsForeachStatementSyntax foreachStmt => TransformForeachStatement(foreachStmt),
+            IfStatementSyntax ifStmt => TransformIfStatement(ifStmt),
+            ForEachStatementSyntax foreachStmt => TransformForEachStatement(foreachStmt),
             _ => throw new NotImplementedException(
                 $"Statement type {stmt.GetType().Name} not supported"
             ),
         };
     }
 
-    private KsIfStatement TransformIfStatement(KsIfStatementSyntax ifStmt)
+    private IrIfStatement TransformIfStatement(IfStatementSyntax ifStmt)
     {
         var condition = TransformExpression(ifStmt.Condition);
-        var thenBlock = TransformBlock(ifStmt.Block);
-        KsBlock? elseBlock = null;
+        var thenBlock = TransformBlock(ifStmt.ThenBlock);
+        IrBlock? elseBlock = null;
 
         if (ifStmt.Else != null)
         {
-            if (ifStmt.Else is KsElseStatementSyntax elseStmt)
+            if (ifStmt.Else is ElseStatementSyntax elseStmt)
             {
                 elseBlock = TransformBlock(elseStmt.Block);
             }
-            else if (ifStmt.Else is KsElseIfClauseSyntax elseIfStmt)
+            else if (ifStmt.Else is ElseIfClauseSyntax elseIfStmt)
             {
                 // Convert else-if to a block containing only an if statement
                 var nestedIf = TransformIfStatement(
-                    new KsIfStatementSyntax(elseIfStmt.Condition, elseIfStmt.Block, elseIfStmt.Else)
+                    new IfStatementSyntax(elseIfStmt.Condition, elseIfStmt.Block, elseIfStmt.Else)
                 );
 
-                elseBlock = new KsBlock(ImmutableList.Create<KsStatement>(nestedIf));
+                elseBlock = new IrBlock(ImmutableList.Create<IrStatement>(nestedIf));
             }
         }
 
-        return new KsIfStatement(condition, thenBlock, elseBlock);
+        return new IrIfStatement(condition, thenBlock, elseBlock);
     }
 
-    private KsStatement TransformForeachStatement(KsForeachStatementSyntax foreachStmt)
+    private IrForEachStatement TransformForEachStatement(ForEachStatementSyntax foreachStmt)
     {
-        var itemName = new KsIdentifier(foreachStmt.ItemIdentifier.Name);
-        var collection = TransformExpression(foreachStmt.Expression);
-        var body = TransformBlock(foreachStmt.Block);
+        var identifier = new IrIdentifier(foreachStmt.Identifier.Text);
+        var collection = TransformExpression(foreachStmt.Collection);
+        var body = TransformBlock(foreachStmt.Body);
 
-        // Since we don't have a specific type for foreach in the IR,
-        // we can use a temporary block or create a type for this
-        return new KsForEachStatement
+        return new IrForEachStatement
         {
-            ItemIdentifier = itemName,
+            Identifier = identifier,
             Collection = collection,
             Body = body,
         };

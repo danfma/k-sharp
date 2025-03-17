@@ -24,8 +24,8 @@ public class KsSyntaxReader
     /// </summary>
     /// <param name="projectName">Project name</param>
     /// <param name="rootDirectory">Project root directory</param>
-    /// <returns>A KsSyntaxProject object with the AST of all files</returns>
-    public KsProjectSyntax ReadProject(string projectName, string rootDirectory)
+    /// <returns>A CompilationSyntax object with the AST of all files</returns>
+    public CompilationSyntax ReadProject(string projectName, string rootDirectory)
     {
         var sourceFiles = Directory.GetFiles(rootDirectory, "*.ks", SearchOption.AllDirectories);
 
@@ -53,7 +53,7 @@ public class KsSyntaxReader
     /// </summary>
     /// <param name="filePath">File path</param>
     /// <returns>The source file with its syntax tree</returns>
-    public KsSourceFileSyntax ReadSourceFile(string filePath)
+    public CompilationUnitSyntax ReadSourceFile(string filePath)
     {
         var parseTree = Parse(filePath);
 
@@ -73,7 +73,7 @@ public class KsSyntaxReader
     /// <param name="sourceCode">K# source code</param>
     /// <param name="fileName">Virtual file name (optional)</param>
     /// <returns>The source file with its syntax tree</returns>
-    public KsSourceFileSyntax ReadSourceFromString(
+    public CompilationUnitSyntax ReadSourceFromString(
         string sourceCode,
         string fileName = "unnamed.ks"
     )

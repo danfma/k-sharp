@@ -2,17 +2,17 @@
   FileName: Examples.FizzBuzz.ks,
   Declarations: [
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: main
+          Text: main
         },
         ReturnType: {},
         Body: {
           Statements: [
             {
               Expression: {
-                Name: {
-                  Name: fizzBuzzTo
+                MethodName: {
+                  Text: fizzBuzzTo
                 },
                 Arguments: [
                   {
@@ -26,35 +26,35 @@
       }
     },
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: isDivisibleBy
+          Text: isDivisibleBy
         },
         Parameters: [
           {
-            Name: {
-              Name: number
+            Identifier: {
+              Text: number
             },
             Type: {
-              Identifier: {
-                Name: Int32
+              TypeName: {
+                Text: Int32
               }
             }
           },
           {
-            Name: {
-              Name: divisor
+            Identifier: {
+              Text: divisor
             },
             Type: {
-              Identifier: {
-                Name: Int32
+              TypeName: {
+                Text: Int32
               }
             }
           }
         ],
         ReturnType: {
-          Identifier: {
-            Name: Bool
+          TypeName: {
+            Text: Bool
           }
         },
         Body: {
@@ -62,8 +62,8 @@
             {
               Condition: {
                 Left: {
-                  Name: {
-                    Name: divisor
+                  Identifier: {
+                    Text: divisor
                   }
                 },
                 Operator: {
@@ -71,12 +71,12 @@
                 },
                 Right: {}
               },
-              Block: {
+              ThenBlock: {
                 Statements: [
                   {
                     Expression: {
-                      Name: {
-                        Name: false
+                      Identifier: {
+                        Text: false
                       }
                     }
                   }
@@ -86,8 +86,8 @@
             {
               Expression: {
                 Left: {
-                  Name: {
-                    Name: number
+                  Identifier: {
+                    Text: number
                   }
                 },
                 Operator: {
@@ -95,8 +95,8 @@
                 },
                 Right: {
                   Left: {
-                    Name: {
-                      Name: divisor
+                    Identifier: {
+                      Text: divisor
                     }
                   },
                   Operator: {
@@ -111,18 +111,18 @@
       }
     },
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: fizzBuzz
+          Text: fizzBuzz
         },
         Parameters: [
           {
-            Name: {
-              Name: number
+            Identifier: {
+              Text: number
             },
             Type: {
-              Identifier: {
-                Name: Int32
+              TypeName: {
+                Text: Int32
               }
             }
           }
@@ -132,13 +132,13 @@
           Statements: [
             {
               Condition: {
-                Name: {
-                  Name: isDivisibleBy
+                MethodName: {
+                  Text: isDivisibleBy
                 },
                 Arguments: [
                   {
-                    Name: {
-                      Name: number
+                    Identifier: {
+                      Text: number
                     }
                   },
                   {
@@ -146,12 +146,12 @@
                   }
                 ]
               },
-              Block: {
+              ThenBlock: {
                 Statements: [
                   {
                     Expression: {
-                      Name: {
-                        Name: writeLine
+                      MethodName: {
+                        Text: writeLine
                       },
                       Arguments: [
                         {
@@ -164,13 +164,13 @@
               },
               Else: {
                 Condition: {
-                  Name: {
-                    Name: isDivisibleBy
+                  MethodName: {
+                    Text: isDivisibleBy
                   },
                   Arguments: [
                     {
-                      Name: {
-                        Name: number
+                      Identifier: {
+                        Text: number
                       }
                     },
                     {
@@ -182,8 +182,8 @@
                   Statements: [
                     {
                       Expression: {
-                        Name: {
-                          Name: writeLine
+                        MethodName: {
+                          Text: writeLine
                         },
                         Arguments: [
                           {
@@ -196,13 +196,13 @@
                 },
                 Else: {
                   Condition: {
-                    Name: {
-                      Name: isDivisibleBy
+                    MethodName: {
+                      Text: isDivisibleBy
                     },
                     Arguments: [
                       {
-                        Name: {
-                          Name: number
+                        Identifier: {
+                          Text: number
                         }
                       },
                       {
@@ -214,8 +214,8 @@
                     Statements: [
                       {
                         Expression: {
-                          Name: {
-                            Name: writeLine
+                          MethodName: {
+                            Text: writeLine
                           },
                           Arguments: [
                             {
@@ -231,13 +231,13 @@
                       Statements: [
                         {
                           Expression: {
-                            Name: {
-                              Name: writeLine
+                            MethodName: {
+                              Text: writeLine
                             },
                             Arguments: [
                               {
-                                Name: {
-                                  Name: number
+                                Identifier: {
+                                  Text: number
                                 }
                               }
                             ]
@@ -254,34 +254,34 @@
       }
     },
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: fizzBuzzTo
+          Text: fizzBuzzTo
         },
         Parameters: [
           {
-            Name: {
-              Name: number
+            Identifier: {
+              Text: number
             },
             Type: {
-              Identifier: {
-                Name: Int32
+              TypeName: {
+                Text: Int32
               }
             }
           }
         ],
         ReturnType: {
-          Identifier: {
-            Name: Void
+          TypeName: {
+            Text: Void
           }
         },
         Body: {
           Statements: [
             {
-              ItemIdentifier: {
-                Name: i
+              Identifier: {
+                Text: i
               },
-              Expression: {
+              Collection: {
                 Left: {
                   Value: 1
                 },
@@ -289,22 +289,22 @@
                   Symbol: ..
                 },
                 Right: {
-                  Name: {
-                    Name: number
+                  Identifier: {
+                    Text: number
                   }
                 }
               },
-              Block: {
+              Body: {
                 Statements: [
                   {
                     Expression: {
-                      Name: {
-                        Name: fizzBuzz
+                      MethodName: {
+                        Text: fizzBuzz
                       },
                       Arguments: [
                         {
-                          Name: {
-                            Name: i
+                          Identifier: {
+                            Text: i
                           }
                         }
                       ]

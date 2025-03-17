@@ -16,13 +16,13 @@ public class TreeNodeTransformer
     }
 
     /// <summary>
-    /// Cria um KsSyntaxProject a partir de uma lista de ParseTrees
+    /// Creates a CompilationSyntax from a list of parse trees
     /// </summary>
-    /// <param name="parseTrees">Árvores de análise sintática para cada arquivo</param>
-    /// <param name="projectName">Nome do projeto</param>
-    /// <param name="rootDirectory">Diretório raiz do projeto</param>
-    /// <returns>Um objeto KsSyntaxProject contendo todos os arquivos fonte</returns>
-    public KsProjectSyntax ToProject(
+    /// <param name="parseTrees">Parse trees for each source file</param>
+    /// <param name="projectName">Name of the project</param>
+    /// <param name="rootDirectory">Root directory of the project</param>
+    /// <returns>A CompilationSyntax object containing all source files</returns>
+    public CompilationSyntax ToProject(
         IEnumerable<(ParseTree Tree, string FileName)> parseTrees,
         string projectName,
         string rootDirectory
@@ -32,15 +32,15 @@ public class TreeNodeTransformer
             .Select(item => ToSourceFile(item.Tree, item.FileName))
             .ToImmutableList();
 
-        return new KsProjectSyntax
+        return new CompilationSyntax
         {
-            Name = new KsIdentifierSyntax(projectName),
+            Name = new IdentifierTokenSyntax(projectName),
             RootDirectory = rootDirectory,
             SourceFiles = sourceFiles,
         };
     }
 
-    public KsSourceFileSyntax ToSourceFile(ParseTree parseTree, string fileName)
+    public CompilationUnitSyntax ToSourceFile(ParseTree parseTree, string fileName)
     {
         var rootNode = parseTree.Root;
 
@@ -50,7 +50,7 @@ public class TreeNodeTransformer
         var namespaceDeclaration = ToNamespaceDeclaration(rootNode.ChildNodes[1]);
         var topLevelDeclarationList = ToTopLevelDeclarationList(rootNode.ChildNodes[2]);
 
-        return new KsSourceFileSyntax
+        return new CompilationUnitSyntax
         {
             FileName = fileName,
             Usings = usingList,
@@ -59,21 +59,21 @@ public class TreeNodeTransformer
         };
     }
 
-    private ImmutableList<KsUsingDirectiveSyntax> ToUsingList(ParseTreeNode node)
+    private ImmutableList<UsingDirectiveSyntax> ToUsingList(ParseTreeNode node)
     {
         return node.ChildNodes.Select(ToUsingDirective).ToImmutableList();
     }
 
-    private KsUsingDirectiveSyntax ToUsingDirective(ParseTreeNode node)
+    private UsingDirectiveSyntax ToUsingDirective(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.UsingDirective);
 
         var namespace_ = ToIdentifier(node.ChildNodes[1]);
 
-        return new KsUsingDirectiveSyntax(namespace_);
+        return new UsingDirectiveSyntax(namespace_);
     }
 
-    private KsNamespaceDeclarationSyntax? ToNamespaceDeclaration(ParseTreeNode node)
+    private NamespaceDeclarationSyntax? ToNamespaceDeclaration(ParseTreeNode node)
     {
         if (node.ChildNodes.Count == 0)
             return null;
@@ -82,15 +82,15 @@ public class TreeNodeTransformer
 
         var name = ToIdentifier(node.ChildNodes[1]);
 
-        return new KsNamespaceDeclarationSyntax(name);
+        return new NamespaceDeclarationSyntax(name);
     }
 
-    private ImmutableList<KsTopLevelDeclarationSyntax> ToTopLevelDeclarationList(ParseTreeNode node)
+    private ImmutableList<GlobalDeclarationSyntax> ToTopLevelDeclarationList(ParseTreeNode node)
     {
         return node.ChildNodes.Select(ToTopLevelDeclaration).ToImmutableList();
     }
 
-    private KsTopLevelDeclarationSyntax ToTopLevelDeclaration(ParseTreeNode node)
+    private GlobalDeclarationSyntax ToTopLevelDeclaration(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.TopLevelDeclaration);
 
@@ -98,22 +98,22 @@ public class TreeNodeTransformer
 
         return node.Term.Name switch
         {
-            NodeNames.FunctionDeclaration => new KsTopLevelFunctionDeclarationSyntax(
+            NodeNames.FunctionDeclaration => new GlobalMethodDeclarationSyntax(
                 ToFunctionDeclaration(node)
             ),
-            NodeNames.VariableDeclaration => new KsTopLevelVariableDeclarationSyntax(
+            NodeNames.VariableDeclaration => new GlobalVariableDeclarationSyntax(
                 ToVariableDeclaration(node)
             ),
             _ => throw new InvalidOperationException($"Unknown declaration type: {node.Term.Name}"),
         };
     }
 
-    private ImmutableList<KsDeclarationSyntax> ToDeclarationList(ParseTreeNode node)
+    private ImmutableList<DeclarationSyntax> ToDeclarationList(ParseTreeNode node)
     {
         return node.ChildNodes.Select(ToDeclaration).ToImmutableList();
     }
 
-    private KsDeclarationSyntax ToDeclaration(ParseTreeNode node)
+    private DeclarationSyntax ToDeclaration(ParseTreeNode node)
     {
         return node.Term.Name switch
         {
@@ -123,7 +123,7 @@ public class TreeNodeTransformer
         };
     }
 
-    private KsFunctionDeclarationSyntax ToFunctionDeclaration(ParseTreeNode node)
+    private MethodDeclarationSyntax ToFunctionDeclaration(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.FunctionDeclaration);
 
@@ -132,26 +132,26 @@ public class TreeNodeTransformer
         var returnType = ToTypeAnnotation(node.ChildNodes[3]);
         var body = ToBlockStatement(node.ChildNodes[4]);
 
-        return new KsFunctionDeclarationSyntax(identifier, parameterList, returnType, body);
+        return new MethodDeclarationSyntax(identifier, parameterList, returnType, body);
     }
 
-    private KsBlockStatementSyntax ToBlockStatement(ParseTreeNode node)
+    private BlockSyntax ToBlockStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.BlockStatement);
 
         var statements = node.ChildNodes.SelectMany(ToStatementList).ToImmutableList();
 
-        return new KsBlockStatementSyntax(statements);
+        return new BlockSyntax(statements);
     }
 
-    private ImmutableList<KsStatementSyntax> ToStatementList(ParseTreeNode node)
+    private ImmutableList<StatementSyntax> ToStatementList(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.StatementList);
 
         return node.ChildNodes.Select(ToStatement).ToImmutableList();
     }
 
-    private KsStatementSyntax ToStatement(ParseTreeNode node)
+    private StatementSyntax ToStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.Statement);
 
@@ -168,26 +168,26 @@ public class TreeNodeTransformer
         };
     }
 
-    private KsExpressionStatementSyntax ToExpressionStatement(ParseTreeNode node)
+    private ExpressionStatementSyntax ToExpressionStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ExpressionStatement);
 
         var expression = ToExpression(node.ChildNodes[0]);
 
-        return new KsExpressionStatementSyntax(expression);
+        return new ExpressionStatementSyntax(expression);
     }
 
-    private KsReturnStatementSyntax ToReturnStatement(ParseTreeNode node)
+    private ReturnStatementSyntax ToReturnStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ReturnStatement);
         AssertTerm(node.ChildNodes[0], KeyWord.Return);
 
         var expression = node.ChildNodes.Count == 1 ? null : ToExpression(node.ChildNodes[1]);
 
-        return new KsReturnStatementSyntax(expression);
+        return new ReturnStatementSyntax(expression);
     }
 
-    private KsIfStatementSyntax ToIfStatement(ParseTreeNode node)
+    private IfStatementSyntax ToIfStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.IfStatement);
         AssertTerm(node.ChildNodes[0], KeyWord.If);
@@ -196,10 +196,10 @@ public class TreeNodeTransformer
         var blockStatement = ToBlockStatement(node.ChildNodes[2]);
         var elseClause = ToElseClause(node.ChildNodes[3]);
 
-        return new KsIfStatementSyntax(condition, blockStatement, elseClause);
+        return new IfStatementSyntax(condition, blockStatement, elseClause);
     }
 
-    private KsForeachStatementSyntax ToForeachStatement(ParseTreeNode node)
+    private ForEachStatementSyntax ToForeachStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ForeachStatement);
         AssertTerm(node.ChildNodes[0], KeyWord.Foreach);
@@ -209,10 +209,10 @@ public class TreeNodeTransformer
         var expression = ToExpression(node.ChildNodes[3]);
         var blockStatement = ToBlockStatement(node.ChildNodes[4]);
 
-        return new KsForeachStatementSyntax(itemIdentifier, expression, blockStatement);
+        return new ForEachStatementSyntax(itemIdentifier, expression, blockStatement);
     }
 
-    private KsElseClauseSyntax? ToElseClause(ParseTreeNode node)
+    private ElseClauseSyntax? ToElseClause(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ElseClause);
 
@@ -229,23 +229,23 @@ public class TreeNodeTransformer
         };
     }
 
-    private KsElseStatementSyntax ToElseStatement(ParseTreeNode node)
+    private ElseStatementSyntax ToElseStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.BlockStatement);
 
-        return new KsElseStatementSyntax(ToBlockStatement(node));
+        return new ElseStatementSyntax(ToBlockStatement(node));
     }
 
-    private KsElseIfClauseSyntax ToElseIfStatement(ParseTreeNode node)
+    private ElseIfClauseSyntax ToElseIfStatement(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.IfStatement);
 
         var statement = ToIfStatement(node);
 
-        return new KsElseIfClauseSyntax(statement.Condition, statement.Block, statement.Else);
+        return new ElseIfClauseSyntax(statement.Condition, statement.ThenBlock, statement.Else);
     }
 
-    private KsExpressionSyntax ToExpression(ParseTreeNode node)
+    private ExpressionSyntax ToExpression(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.Expression);
 
@@ -255,13 +255,12 @@ public class TreeNodeTransformer
         {
             NodeNames.ValueExpression => ToValueExpression(node),
             NodeNames.BinaryExpression => ToBinaryExpression(node),
-            // NodeNames.FunctionCall => ToFunctionCall(node),
             // NodeNames.StringInterpolation => ToStringInterpolation(node),
             _ => throw new InvalidOperationException($"Unknown expression type: {node.Term.Name}"),
         };
     }
 
-    private KsValueExpressionSyntax ToValueExpression(ParseTreeNode node)
+    private ExpressionSyntax ToValueExpression(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ValueExpression);
 
@@ -271,21 +270,21 @@ public class TreeNodeTransformer
         {
             NodeNames.Variable => ToVariable(node),
             NodeNames.Literal => ToLiteral(node),
-            NodeNames.FunctionCall => ToFunctionCall(node),
+            NodeNames.FunctionCall => ToInvocation(node),
             _ => throw new InvalidOperationException(
                 $"Unknown value expression type: {node.Term.Name}"
             ),
         };
     }
 
-    private KsVariableExpressionSyntax ToVariable(ParseTreeNode node)
+    private IdentifierNameSyntax ToVariable(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.Variable);
 
-        return new KsVariableExpressionSyntax(ToIdentifier(node.ChildNodes[0]));
+        return new IdentifierNameSyntax(ToIdentifier(node.ChildNodes[0]));
     }
 
-    private KsLiteralExpressionSyntax ToLiteral(ParseTreeNode node)
+    private LiteralExpressionSyntax ToLiteral(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.Literal);
 
@@ -297,7 +296,7 @@ public class TreeNodeTransformer
         };
     }
 
-    private KsLiteralExpressionSyntax ToNumberLiteral(ParseTreeNode node)
+    private LiteralExpressionSyntax ToNumberLiteral(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.NumberLiteral);
 
@@ -305,39 +304,39 @@ public class TreeNodeTransformer
 
         return tokenValue switch
         {
-            int i => new KsNumberLiteralExpressionSyntax<int>(i),
-            double d => new KsNumberLiteralExpressionSyntax<double>(d),
+            int i => new NumericLiteralExpressionSyntax<int>(i),
+            double d => new NumericLiteralExpressionSyntax<double>(d),
             _ => throw new InvalidOperationException($"Unknown number literal type: {tokenValue}"),
         };
     }
 
-    private KsStringLiteralExpressionSyntax ToStringLiteral(ParseTreeNode node)
+    private StringLiteralExpressionSyntax ToStringLiteral(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.StringLiteral);
 
         var tokenValue = (string)node.Token.Value;
 
-        return new KsStringLiteralExpressionSyntax(tokenValue);
+        return new StringLiteralExpressionSyntax(tokenValue);
     }
 
-    private KsValueExpressionSyntax ToFunctionCall(ParseTreeNode node)
+    private InvocationExpressionSyntax ToInvocation(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.FunctionCall);
 
         var identifier = ToIdentifier(node.ChildNodes[0]);
         var arguments = ToArgumentArray(node.ChildNodes[1]);
 
-        return new KsFunctionCallExpressionSyntax(identifier, arguments);
+        return new InvocationExpressionSyntax(identifier, arguments);
     }
 
-    private ImmutableArray<KsExpressionSyntax> ToArgumentArray(ParseTreeNode node)
+    private ImmutableArray<ExpressionSyntax> ToArgumentArray(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ArgumentList);
 
         return node.ChildNodes.Select(ToExpression).ToImmutableArray();
     }
 
-    private KsBinaryExpressionSyntax ToBinaryExpression(ParseTreeNode node)
+    private BinaryExpressionSyntax ToBinaryExpression(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.BinaryExpression);
 
@@ -345,52 +344,52 @@ public class TreeNodeTransformer
         var op = ToBinaryOperator(node.ChildNodes[1]);
         var right = ToExpression(node.ChildNodes[2]);
 
-        return new KsBinaryExpressionSyntax(left, op, right);
+        return new BinaryExpressionSyntax(left, op, right);
     }
 
-    private KsBinaryOperatorSyntax ToBinaryOperator(ParseTreeNode node)
+    private BinaryOperatorTokenSyntax ToBinaryOperator(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.BinaryOperator);
 
         var token = node.ChildNodes[0].Token;
 
-        return new KsBinaryOperatorSyntax(token.Text);
+        return new BinaryOperatorTokenSyntax(token.Text);
     }
 
-    private KsIdentifierSyntax ToIdentifier(ParseTreeNode node)
+    private IdentifierTokenSyntax ToIdentifier(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.Identifier);
 
-        return new KsIdentifierSyntax(node.Token.Text);
+        return new IdentifierTokenSyntax(node.Token.Text);
     }
 
-    private ImmutableList<KsParameterSyntax> ToParameterList(ParseTreeNode node)
+    private ImmutableList<ParameterSyntax> ToParameterList(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.ParameterList);
 
         return node.ChildNodes.Select(ToParameter).ToImmutableList();
     }
 
-    private KsParameterSyntax ToParameter(ParseTreeNode node)
+    private ParameterSyntax ToParameter(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.Parameter);
 
         var identifier = ToIdentifier(node.ChildNodes[0]);
         var typeAnnotation = ToTypeAnnotation(node.ChildNodes[1]);
 
-        return new KsParameterSyntax(identifier, typeAnnotation);
+        return new ParameterSyntax(identifier, typeAnnotation);
     }
 
-    private KsTypeAnnotationSyntax ToTypeAnnotation(ParseTreeNode node)
+    private TypeClauseSyntax ToTypeAnnotation(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.TypeAnnotation);
 
         var identifier = node.ChildNodes.Count > 0 ? ToIdentifier(node.ChildNodes[0]) : null;
 
-        return new KsTypeAnnotationSyntax(identifier);
+        return new TypeClauseSyntax(identifier);
     }
 
-    private KsVariableDeclarationSyntax ToVariableDeclaration(ParseTreeNode node)
+    private VariableDeclarationSyntax ToVariableDeclaration(ParseTreeNode node)
     {
         AssertTerm(node, NodeNames.VariableDeclaration);
 
@@ -399,7 +398,7 @@ public class TreeNodeTransformer
         var typeAnnotation = ToTypeAnnotation(node.ChildNodes[2]);
         var initializer = node.ChildNodes.Count == 4 ? ToExpression(node.ChildNodes[3]) : null;
 
-        return new KsVariableDeclarationSyntax(mutable, identifier, typeAnnotation, initializer);
+        return new VariableDeclarationSyntax(mutable, identifier, typeAnnotation, initializer);
     }
 
     public static class NodeNames

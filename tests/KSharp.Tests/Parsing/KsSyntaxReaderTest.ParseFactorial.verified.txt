@@ -2,25 +2,25 @@
   FileName: Examples.Factorial.ks,
   Declarations: [
     {
-      Function: {
+      Method: {
         Identifier: {
-          Name: factorial
+          Text: factorial
         },
         Parameters: [
           {
-            Name: {
-              Name: n
+            Identifier: {
+              Text: n
             },
             Type: {
-              Identifier: {
-                Name: Int
+              TypeName: {
+                Text: Int
               }
             }
           }
         ],
         ReturnType: {
-          Identifier: {
-            Name: Int
+          TypeName: {
+            Text: Int
           }
         },
         Body: {
@@ -28,8 +28,8 @@
             {
               Condition: {
                 Left: {
-                  Name: {
-                    Name: n
+                  Identifier: {
+                    Text: n
                   }
                 },
                 Operator: {
@@ -39,12 +39,12 @@
                   Value: 2
                 }
               },
-              Block: {
+              ThenBlock: {
                 Statements: [
                   {
                     Expression: {
-                      Name: {
-                        Name: n
+                      Identifier: {
+                        Text: n
                       }
                     }
                   }
@@ -54,22 +54,22 @@
             {
               Expression: {
                 Left: {
-                  Name: {
-                    Name: n
+                  Identifier: {
+                    Text: n
                   }
                 },
                 Operator: {
                   Symbol: *
                 },
                 Right: {
-                  Name: {
-                    Name: factorial
+                  MethodName: {
+                    Text: factorial
                   },
                   Arguments: [
                     {
                       Left: {
-                        Name: {
-                          Name: n
+                        Identifier: {
+                          Text: n
                         }
                       },
                       Operator: {

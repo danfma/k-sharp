@@ -14,7 +14,7 @@ public class KsSyntaxReaderTest
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
 
-        sourceFile.ShouldBeOfType<KsSourceFileSyntax>();
+        sourceFile.ShouldBeOfType<CompilationUnitSyntax>();
 
         return Verify(sourceFile);
     }
@@ -27,7 +27,7 @@ public class KsSyntaxReaderTest
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
 
-        sourceFile.ShouldBeOfType<KsSourceFileSyntax>();
+        sourceFile.ShouldBeOfType<CompilationUnitSyntax>();
 
         return Verify(sourceFile);
     }
@@ -40,7 +40,7 @@ public class KsSyntaxReaderTest
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
 
-        sourceFile.ShouldBeOfType<KsSourceFileSyntax>();
+        sourceFile.ShouldBeOfType<CompilationUnitSyntax>();
 
         return Verify(sourceFile);
     }
@@ -53,7 +53,7 @@ public class KsSyntaxReaderTest
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);
 
-        sourceFile.ShouldBeOfType<KsSourceFileSyntax>();
+        sourceFile.ShouldBeOfType<CompilationUnitSyntax>();
 
         return Verify(sourceFile);
     }
