@@ -1,6 +1,6 @@
 namespace KSharp.Compiler.IR;
 
 /// <summary>
-/// Represents a concrete operator implementation.
+/// Base class for operators in the IR.
 /// </summary>
-public record KsConcreteOperator(string Symbol) : KsOperator(Symbol);
+public abstract record KsOperator(string Symbol) : KsNode;

@@ -194,46 +194,28 @@ public class SyntaxTransformer
         
         KsOperator op;
 
-        switch (binExpr.Operator.Symbol)
+        // Map operator symbols to intrinsic operators
+        op = binExpr.Operator.Symbol switch
         {
-            case "+":
-                op = KsOperator.Plus;
-                break;
-            case "-":
-                op = new KsConcreteOperator("-");
-                break;
-            case "*":
-                op = new KsConcreteOperator("*");
-                break;
-            case "/":
-                op = new KsConcreteOperator("/");
-                break;
-            case "%":
-                op = new KsConcreteOperator("%");
-                break;
-            case "==":
-                op = new KsConcreteOperator("==");
-                break;
-            case "!=":
-                op = new KsConcreteOperator("!=");
-                break;
-            case "<":
-                op = new KsConcreteOperator("<");
-                break;
-            case "<=":
-                op = new KsConcreteOperator("<=");
-                break;
-            case ">":
-                op = new KsConcreteOperator(">");
-                break;
-            case ">=":
-                op = new KsConcreteOperator(">=");
-                break;
-            default:
-                throw new NotImplementedException(
-                    $"Binary operator {binExpr.Operator.Symbol} not supported"
-                );
-        }
+            "+" => KsIntrinsicOperator.Plus,
+            "-" => KsIntrinsicOperator.Minus,
+            "*" => KsIntrinsicOperator.Multiply,
+            "/" => KsIntrinsicOperator.Divide,
+            "%" => KsIntrinsicOperator.Modulo,
+            "==" => KsIntrinsicOperator.Equal,
+            "!=" => KsIntrinsicOperator.NotEqual,
+            "<" => KsIntrinsicOperator.LessThan,
+            "<=" => KsIntrinsicOperator.LessThanOrEqual,
+            ">" => KsIntrinsicOperator.GreaterThan,
+            ">=" => KsIntrinsicOperator.GreaterThanOrEqual,
+            "&&" => KsIntrinsicOperator.And,
+            "||" => KsIntrinsicOperator.Or,
+            "&" => KsIntrinsicOperator.BitwiseAnd,
+            "|" => KsIntrinsicOperator.BitwiseOr,
+            "^" => KsIntrinsicOperator.BitwiseXor,
+            // For custom operators, use KsConcreteOperator
+            _ => new KsConcreteOperator(binExpr.Operator.Symbol)
+        };
 
         return new KsBinaryExpression
         {

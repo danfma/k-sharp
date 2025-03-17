@@ -63,7 +63,7 @@ public class SyntaxTransformerTest
         var binaryExpression = (KsBinaryExpression)c.Initializer;
 
         binaryExpression.Left.ShouldBeOfType<KsLiteralExpression>();
-        binaryExpression.Operator.ShouldBe(KsOperator.Plus);
+        binaryExpression.Operator.ShouldBe(KsIntrinsicOperator.Plus);
         binaryExpression.Right.ShouldBe(new KsLiteralExpression(2));
     }
 }
