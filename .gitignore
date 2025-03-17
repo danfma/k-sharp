@@ -6,5 +6,5 @@ obj
 # xUnit
 *.received.txt
 
-/Kool.sln.DotSettings.user
+/KSharp.sln.DotSettings.user
 .DS_Store
