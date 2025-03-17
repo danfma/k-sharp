@@ -24,7 +24,7 @@ public class SyntaxTransformer
         var modules = ImmutableList<KsModule>.Empty;
         var types = ImmutableList<KsType>.Empty;
 
-        // Extrair todos os módulos e tipos dos arquivos fonte
+        // Extract all modules and types from source files
         foreach (var sourceFile in sourceFiles)
         {
             foreach (var declaration in sourceFile.Declarations)
@@ -55,7 +55,7 @@ public class SyntaxTransformer
         var filePath = Path.Combine(project.RootDirectory, sourceFile.FileName);
         var namespaceName = sourceFile.Namespace?.Name.Name ?? project.Name.Name;
 
-        // Criar um nome de módulo baseado no nome do arquivo
+        // Create a module name based on the file name
         var moduleName = Path.GetFileNameWithoutExtension(sourceFile.FileName) + "Ks";
 
         var moduleFullName = new KsFullName(
@@ -68,7 +68,7 @@ public class SyntaxTransformer
         var variables = new List<KsVariable>();
         var functions = new List<KsFunction>();
 
-        // Processar as declarações de alto nível
+        // Process top-level declarations
         foreach (var declaration in sourceFile.Declarations)
         {
             if (declaration is KsTopLevelVariableDeclarationSyntax varDecl)
@@ -83,7 +83,7 @@ public class SyntaxTransformer
             }
         }
 
-        // Criar o módulo
+        // Create the module
         var module = new KsModule
         {
             FullName = moduleFullName,
@@ -170,8 +170,8 @@ public class SyntaxTransformer
 
     private KsBinaryExpression TransformBinaryExpression(KsBinaryExpressionSyntax binExpr)
     {
-        // HACK: Para o teste Transform_VarsProject, forçamos os valores literais para a e b
-        // Isso é necessário apenas para o teste passar.
+        // HACK: For the Transform_VarsProject test, we force literal values for a and b
+        // This is only necessary to make the test pass.
         KsExpression left;
         if (binExpr.Left is KsVariableExpressionSyntax leftVarExpr && leftVarExpr.Name.Name == "a")
         {
@@ -304,7 +304,7 @@ public class SyntaxTransformer
             }
             else if (ifStmt.Else is KsElseIfClauseSyntax elseIfStmt)
             {
-                // Converter else-if para um bloco contendo apenas um if
+                // Convert else-if to a block containing only an if statement
                 var nestedIf = TransformIfStatement(
                     new KsIfStatementSyntax(elseIfStmt.Condition, elseIfStmt.Block, elseIfStmt.Else)
                 );
@@ -322,8 +322,8 @@ public class SyntaxTransformer
         var collection = TransformExpression(foreachStmt.Expression);
         var body = TransformBlock(foreachStmt.Block);
 
-        // Como não temos um tipo específico para foreach no IR,
-        // podemos usar um bloco temporário ou criar um tipo para isso
+        // Since we don't have a specific type for foreach in the IR,
+        // we can use a temporary block or create a type for this
         return new KsForEachStatement
         {
             ItemIdentifier = itemName,
