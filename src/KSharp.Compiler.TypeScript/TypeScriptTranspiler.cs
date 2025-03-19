@@ -9,14 +9,26 @@ namespace KSharp.Compiler.TypeScript;
 /// </summary>
 public class TypeScriptTranspiler
 {
+    private readonly TypeScriptAstTransformer _astTransformer;
+
+    public TypeScriptTranspiler()
+    {
+        _astTransformer = new TypeScriptAstTransformer();
+    }
+
+    public TypeScriptTranspiler(TypeScriptAstTransformer astTransformer)
+    {
+        _astTransformer = astTransformer ?? new TypeScriptAstTransformer();
+    }
+
     /// <summary>
     /// Transpiles a KSharp compilation to TypeScript source files
     /// </summary>
     /// <param name="compilation">The IR compilation</param>
     /// <returns>A dictionary mapping file paths to TypeScript source files</returns>
-    public Dictionary<string, TsSourceFile> Transpile(IrCompilation compilation)
+    public TsProject Transpile(IrCompilation compilation)
     {
-        var result = new Dictionary<string, TsSourceFile>();
+        var sourceFilesByPath = new Dictionary<string, TsSourceFile>();
 
         // Process each module into a separate TypeScript file
         foreach (var module in compilation.Modules)
@@ -24,10 +36,12 @@ public class TypeScriptTranspiler
             var tsSourceFile = TranspileModule(module);
             var filePath = GetTypeScriptFilePath(module);
 
-            result[filePath] = tsSourceFile;
+            sourceFilesByPath[filePath] = tsSourceFile;
         }
 
-        return result;
+        var tsProject = new TsProject(compilation.Name, sourceFilesByPath.ToImmutableDictionary());
+
+        return _astTransformer.TransformProject(tsProject);
     }
 
     /// <summary>
@@ -41,20 +55,30 @@ public class TypeScriptTranspiler
         var modules = compilationUnit.Declarations.OfType<IrModule>().ToList();
 
         if (modules.Count == 0)
+        {
             return new TsSourceFile(
                 compilationUnit.FilePath,
                 ImmutableArray<TsImportDeclaration>.Empty,
                 ImmutableArray<TsStatement>.Empty
             );
+        }
 
         // For simplicity, combine all modules into a single TypeScript file
         var statements = TranspileModules(modules).ToImmutableArray();
-
-        return new TsSourceFile(
+        
+        var sourceFile = new TsSourceFile(
             compilationUnit.FilePath, // FileName
             ImmutableArray<TsImportDeclaration>.Empty, // Imports
             statements // Statements
         );
+        
+        // Apply the same final transformations we do for projects
+        var project = new TsProject("Temp", 
+            new Dictionary<string, TsSourceFile> { { compilationUnit.FilePath, sourceFile } }.ToImmutableDictionary());
+        var transformedProject = _astTransformer.TransformProject(project);
+        
+        // Return the transformed source file
+        return transformedProject.SourceFiles.First().Value;
     }
 
     private static string GetTypeScriptFilePath(IrModule module)
@@ -73,23 +97,41 @@ public class TypeScriptTranspiler
             statements.Add(TranspileVariable(variable));
         }
 
-        // Add functions
-        foreach (var function in module.Functions)
+        // For top-level statements specifically, we want to handle them differently
+        // from regular functions if this is a specific pattern we recognize
+        var mainFunction = module.Functions.FirstOrDefault(f => f.Name.Value == "Main");
+        var isTopLevel = mainFunction != null && 
+                        module.FullName.Name.Value == "ProgramKs" && 
+                        !module.Functions.Any(f => f.Name.Value != "Main");
+
+        if (isTopLevel && mainFunction?.Body != null)
         {
-            statements.Add(TranspileFunction(function));
+            // Extract statements directly from Main function without wrapping them
+            foreach (var statement in mainFunction.Body.Statements)
+            {
+                statements.Add(TranspileStatement(statement));
+            }
         }
-
-        // If we have a Main function, add an invocation at the end of the file
-        if (module.Functions.Any(f => f.Name.Value == "Main"))
+        else
         {
-            var mainCall = new TsExpressionStatement(
-                new TsFunctionCallExpression(
-                    new TsIdentifier("Main"),
-                    ImmutableArray<TsExpression>.Empty
-                )
-            );
+            // Add functions
+            foreach (var function in module.Functions)
+            {
+                statements.Add(TranspileFunction(function));
+            }
 
-            statements.Add(mainCall);
+            // If we have a Main function (and it's not a top-level mode), add an invocation at the end of the file
+            if (module.Functions.Any(f => f.Name.Value == "Main"))
+            {
+                var mainCall = new TsExpressionStatement(
+                    new TsFunctionCallExpression(
+                        new TsIdentifier("Main"),
+                        ImmutableArray<TsExpression>.Empty
+                    )
+                );
+
+                statements.Add(mainCall);
+            }
         }
 
         return new TsSourceFile(
@@ -388,4 +430,5 @@ public class TypeScriptTranspiler
             new TsIdentifier(typeRef.Name) // TypeName
         );
     }
+
 }

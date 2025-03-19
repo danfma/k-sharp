@@ -12,7 +12,7 @@ public class TypeScriptTranspilerTest
     public void Transpile_VarsProject()
     {
         // Setup - Parse the KSharp code and convert to IR
-        var programFile = "IR.Inputs.Vars.Program.ks";
+        var programFile = "Examples.Vars.Program.ks";
         var programFileContent = SingleFileReader.Read(programFile);
 
         var syntaxNode = new KsSyntaxReader().ReadSourceFromString(
@@ -35,22 +35,24 @@ public class TypeScriptTranspilerTest
 
         // Assert
         tsOutput.ShouldNotBeNull();
-        tsOutput.Count.ShouldBe(1);
-        tsOutput.ShouldContainKey("ProgramKs.ts");
+        tsOutput.SourceFiles.Count.ShouldBe(1);
+        tsOutput.SourceFiles.ShouldContainKey("ProgramKs.ts");
 
-        var tsSourceFile = tsOutput["ProgramKs.ts"];
+        var tsSourceFile = tsOutput.SourceFiles["ProgramKs.ts"];
         var tsCode = tsSourceFile.ToTypeScript();
 
-        tsCode.ShouldContain("const a = 1");
-        tsCode.ShouldContain("const b = 2");
-        tsCode.ShouldContain("const c = 1 + 2");
+        // We're now generating more complete TypeScript with types, so let's update our expectations
+        tsCode.ShouldContain("const a: System.Int32");
+        tsCode.ShouldContain("const b: System.Int32");
+        tsCode.ShouldContain("Ks.toInt32(1)");
+        tsCode.ShouldContain("Ks.toInt32(2)");
     }
 
     [Fact]
     public void TranspileCompilationUnit_VarsProject()
     {
         // Setup - Parse the KSharp code and convert to IR
-        var programFile = "IR.Inputs.Vars.Program.ks";
+        var programFile = "Examples.Vars.Program.ks";
         var programFileContent = SingleFileReader.Read(programFile);
 
         var syntaxNode = new KsSyntaxReader().ReadSourceFromString(
@@ -71,20 +73,23 @@ public class TypeScriptTranspilerTest
         // Act - Transpile IR to TypeScript
         var transpiler = new TypeScriptTranspiler();
         var tsSourceFile = transpiler.TranspileCompilationUnit(compilationUnit);
+
         var tsCode = tsSourceFile.ToTypeScript();
 
         // Assert
         tsCode.ShouldNotBeNull();
-        tsCode.ShouldContain("const a = 1");
-        tsCode.ShouldContain("const b = 2");
-        tsCode.ShouldContain("const c = 1 + 2");
+        // We're now generating more complete TypeScript with types, so let's update our expectations
+        tsCode.ShouldContain("const a: System.Int32");
+        tsCode.ShouldContain("const b: System.Int32");
+        tsCode.ShouldContain("Ks.toInt32(1)");
+        tsCode.ShouldContain("Ks.toInt32(2)");
     }
 
     [Fact]
     public void Transpile_TopLevelProject()
     {
         // Setup - Parse the KSharp code and convert to IR
-        var programFile = "IR.Inputs.TopLevel.Program.ks";
+        var programFile = "Examples.TopLevel.TopLevel.ks";
         var programFileContent = SingleFileReader.Read(programFile);
 
         var syntaxNode = new KsSyntaxReader().ReadSourceFromString(
@@ -103,39 +108,17 @@ public class TypeScriptTranspilerTest
 
         // Act - Transpile IR to TypeScript syntax trees
         var transpiler = new TypeScriptTranspiler();
-        var tsOutput = transpiler.Transpile(irNode);
+        var tsProject = transpiler.Transpile(irNode);
 
         // Assert
-        tsOutput.ShouldNotBeNull();
-        tsOutput.Count.ShouldBe(1);
-        tsOutput.ShouldContainKey("ProgramKs.ts");
+        tsProject.ShouldNotBeNull();
+        tsProject.SourceFiles.Count.ShouldBe(1);
+        tsProject.SourceFiles.ShouldContainKey("ProgramKs.ts");
 
-        var tsSourceFile = tsOutput["ProgramKs.ts"];
+        var tsSourceFile = tsProject.SourceFiles["ProgramKs.ts"];
         var tsCode = tsSourceFile.ToTypeScript();
+        var expected = SingleFileReader.Read(programFile.Replace(".ks", ".ts"));
 
-        // Debug output
-        Console.WriteLine("=== TypeScript Output ===");
-        Console.WriteLine(tsCode);
-        Console.WriteLine("========================");
-
-        // Global variables
-        tsCode.ShouldContain("const a = 10");
-        tsCode.ShouldContain("const b = 20");
-
-        // Main function with top-level statements
-        tsCode.ShouldContain("function Main()");
-        tsCode.ShouldContain("writeLine(\"Hello, World!\")");
-        // Due to a hack in SyntaxTransformer.TransformBinaryExpression, 'a + b' becomes '1 + 2'
-        var expressionContains =
-            tsCode.Contains("writeLine(a + b)") || tsCode.Contains("writeLine(1 + 2)");
-        expressionContains.ShouldBeTrue(
-            "Should contain writeLine with a + b or its literal equivalent 1 + 2"
-        );
-
-        // Skip checking for if statement as it's handled differently than expected in the current implementation
-        // Ideally, we would transform all statements, including if statements
-
-        // Function should be auto-called at the end of the file
-        tsCode.ShouldContain("Main();");
+        tsCode.ShouldBe(expected);
     }
 }

@@ -5,5 +5,8 @@ namespace KSharp.Compiler.TypeScript.Syntax;
 /// <summary>
 /// Declaração de importação
 /// </summary>
-public record TsImportDeclaration(string ModuleName, ImmutableArray<TsImportClause> ImportClauses)
+public record TsImportDeclaration(
+    ImmutableArray<TsExportSpecifier> ImportClauses,
+    string ModuleName,
+    TsIdentifier? Alias = null)
     : TsSyntaxNode;
