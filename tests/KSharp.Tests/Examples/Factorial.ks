@@ -1,4 +1,4 @@
-fun factorial(n: Int): Int {
+fun factorial(n: Int32): Int32 {
   if n <= 2 {
     return n
   }

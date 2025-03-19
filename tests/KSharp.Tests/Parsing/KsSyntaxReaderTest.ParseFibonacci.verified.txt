@@ -13,14 +13,14 @@
             },
             Type: {
               TypeName: {
-                Text: UInt
+                Text: UInt32
               }
             }
           }
         ],
         ReturnType: {
           TypeName: {
-            Text: UInt
+            Text: UInt32
           }
         },
         Body: {

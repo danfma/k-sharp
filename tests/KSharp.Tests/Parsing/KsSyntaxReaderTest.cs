@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using KSharp.Compiler;
 using KSharp.Compiler.Syntax;
 
 namespace KSharp.Tests.Parsing;
@@ -61,7 +60,7 @@ public class KsSyntaxReaderTest
     [Fact]
     public Task ParseTopLevel()
     {
-        const string FileName = "Examples.TopLevel.ks";
+        const string FileName = "Examples.TopLevel.TopLevel.ks";
 
         var code = SingleFileReader.Read(FileName);
         var sourceFile = new KsSyntaxReader().ReadSourceFromString(code, FileName);

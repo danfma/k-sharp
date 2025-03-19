@@ -1,0 +1,13 @@
+{
+  "name": "@danfma/ksharp",
+  "version": "1.0.0",
+  "module": "index.ts",
+  "type": "module",
+  "types": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

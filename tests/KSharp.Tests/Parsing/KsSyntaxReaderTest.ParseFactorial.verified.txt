@@ -13,14 +13,14 @@
             },
             Type: {
               TypeName: {
-                Text: Int
+                Text: Int32
               }
             }
           }
         ],
         ReturnType: {
           TypeName: {
-            Text: Int
+            Text: Int32
           }
         },
         Body: {

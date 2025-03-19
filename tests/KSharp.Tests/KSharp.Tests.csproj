@@ -28,6 +28,12 @@
 
     <ItemGroup>
       <EmbeddedResource Include="Examples\*.ks" />
+      <EmbeddedResource Include="Examples\Sum\Program.ks" />
+      <EmbeddedResource Include="Examples\Sum\Program.ts" />
+      <EmbeddedResource Include="Examples\TopLevel\TopLevel.ks" />
+      <EmbeddedResource Include="Examples\TopLevel\TopLevel.ts" />
+      <EmbeddedResource Include="Examples\Vars\Program.ks" />
+      <EmbeddedResource Include="Examples\Vars\Program.ts" />
       <EmbeddedResource Include="IR\**\*.ks" />
       <EmbeddedResource Include="IR\**\*.ts" />
     </ItemGroup>

@@ -13,7 +13,7 @@
             },
             Type: {
               TypeName: {
-                Text: Int
+                Text: Int32
               }
             }
           },
@@ -23,14 +23,14 @@
             },
             Type: {
               TypeName: {
-                Text: Int
+                Text: Int32
               }
             }
           }
         ],
         ReturnType: {
           TypeName: {
-            Text: Int
+            Text: Int32
           }
         },
         Body: {
@@ -71,7 +71,7 @@
               },
               Type: {
                 TypeName: {
-                  Text: Int
+                  Text: Int32
                 }
               },
               Initializer: {
@@ -85,7 +85,7 @@
               },
               Type: {
                 TypeName: {
-                  Text: Int
+                  Text: Int32
                 }
               },
               Initializer: {

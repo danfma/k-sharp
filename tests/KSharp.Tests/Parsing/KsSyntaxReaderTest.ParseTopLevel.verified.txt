@@ -1,5 +1,5 @@
 ﻿{
-  FileName: Examples.TopLevel.ks,
+  FileName: Examples.TopLevel.TopLevel.ks,
   Declarations: [
     {
       Statement: {

@@ -143,7 +143,7 @@ public class Commands
         // Write output files
         Console.WriteLine("Writing TypeScript files");
 
-        foreach (var (filePath, tsSourceFile) in tsFiles.AsParallel())
+        foreach (var (filePath, tsSourceFile) in tsFiles.SourceFiles.AsParallel())
         {
             var outputFilePath = Path.Combine(outputPath, filePath);
             var tsCode = tsSourceFile.ToTypeScript();

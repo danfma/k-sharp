@@ -1,8 +1,6 @@
-using System;
 using KSharp.Compiler.IR;
 using KSharp.Compiler.Syntax;
 using KSharp.Compiler.TypeScript;
-using KSharp.Compiler.TypeScript.Syntax;
 
 namespace KSharp.Tests.TypeScript;
 

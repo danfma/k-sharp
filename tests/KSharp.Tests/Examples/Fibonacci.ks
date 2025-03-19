@@ -1,4 +1,4 @@
-fun fibonacci(n: UInt): UInt {
+fun fibonacci(n: UInt32): UInt32 {
   if n <= 1 {
     return n
   }
